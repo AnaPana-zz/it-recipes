@@ -6,5 +6,4 @@
 .project
 .pydevproject
 .openshift
-itblog/credentials.py
 *.log
