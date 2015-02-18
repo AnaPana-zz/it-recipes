@@ -1,0 +1,41 @@
+<script>
+	window.onload = function() {
+		CKEDITOR.replace('body', {
+			language : 'en',
+			toolbar : 'Basic',
+			uiColor : '#D7E4F0',
+			removePlugins : 'resize',
+			width : 542,
+		});
+	};
+</script>
+<form method="POST">{% csrf_token %}
+	<div class="control-group">
+    	<div class="controls">
+			<div style="color:red">{{ form.non_field_errors }}</div>
+		</div>
+	</div>
+
+	{% for field in form.visible_fields %}
+	<div class="control-group {% if field.errors %}error{% endif %}">
+		{{ field.label }}
+		<div class="controls">
+			{{ field }}
+			{% if field.name = 'captcha' %}
+				<a class="btn btn-small btn-refresh" onclick="refresh_captcha()"><i class="icon-refresh"></i> Refresh</a>
+			{% endif %}
+			<span class="help">{{ field.errors }}</span>
+		</div>
+	</div>
+	{% endfor %}
+	
+	{% for field in form.hidden_fields %}
+		{{ field }}
+	{% endfor %}
+	<div class="control-group">
+    	<div class="controls">
+    		<input type='submit' class="btn btn-success" value = "Add comment"/>
+			<a href="{{ cancel_link }}" class="btn">Cancel</a>
+		</div>
+	</div>
+</form>

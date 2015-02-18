@@ -1,0 +1,48 @@
+<script>
+	window.onload = function() {
+	    
+		CKEDITOR.replace( 'body', {
+			language : 'en',
+		    uiColor : '#D7E4F0',
+		    width : 542,
+		});
+			};
+</script>
+
+<form method="POST" id="id_task_form">{% csrf_token %}
+	<div class="control-group">
+    	<div class="controls">
+			<div style="color:red">{{ form.non_field_errors }}</div>
+		</div>
+	</div>
+
+	{% for field in form.visible_fields %}
+	<div class="control-group {% if field.errors %}error{% endif %}">
+		{{ field.label }} {{ field.help_text }}
+		<div class="controls">
+			{{ field }}
+			<span class="help">{{ field.errors }}</span>
+		</div>
+	</div>
+	{% endfor %}
+	
+	{% for field in form.hidden_fields %}
+		{{ field }}
+	{% endfor %}
+	<div class="control-group">
+    	<div class="controls">
+    		<input class="btn btn-success" type="submit" value="Save">
+			<a href="{% if task_id %}{% url task task_id %}{% else %}{% url tasks 'all' 0 %}{% endif %}" class="btn">Cancel</a>
+		</div>
+	</div>
+</form>
+
+<script>
+	$(document).ready(function() {
+		$("input").each(function() {
+			if (typeof $(this).attr('id') == 'undefined') {
+				$(this).attr('data-provide', 'typeahead').attr('data-source', '[' + '{{ tags }}'.replace(/&#39;/g, '\"') + ']')
+			}
+		})
+	})
+</script>

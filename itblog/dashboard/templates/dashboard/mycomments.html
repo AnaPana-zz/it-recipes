@@ -1,0 +1,32 @@
+{% extends 'dashboard/main.html' %}
+
+{% block dash_content %}
+	{% for comment in comments %}
+		<div class="row"  style="font-size: 12px;">
+			<div class="span1">
+				<img class="discussion-bubble-avatar" src="{{ STATIC_URL }}img/icon-user.png" width="48" height="48"/>
+			</div>
+			<div class="span3">
+				<strong>Me</strong>
+				{{ comment.body|safe }}
+				<span class="muted">{{ comment.date|date }}</span> | 
+				<a href="#"> Edit </a> | 
+				<a href="#" onclick="remove_item(event, {{ comment.id }}, 'comment')"> Delete </a>
+			</div>
+			<div class="span6">
+				{% with comment.article as article %}
+					{% include 'main/itemresults/articleitem.html' %}
+				{% endwith %}
+			</div>
+			<div class="span2">
+			</div>
+		</div>
+		<div class="row">
+			<div class="span10">
+				<hr align="center" size="2" color="#ff0000" />
+			</div>
+			<div class="span2">
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

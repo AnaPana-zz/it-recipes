@@ -1,0 +1,44 @@
+{% extends 'dashboard/mainitems.html' %}
+
+{% block article_items %}
+	<script>
+		function remove_from_favorites(event, id, type) {
+			(event.preventDefault) ? event.preventDefault() : event.returnValue = false;
+		    var r=confirm("Do you really want to remove " + type + "?");
+		    if (r == true) {
+					$.post("", {
+						delete_request : 1,
+						item_id : id,
+						type : type,
+						csrfmiddlewaretoken: getCookie('csrftoken')
+					},
+					function(data) {
+						window.location.reload()
+					});
+			}
+		}
+	</script>
+	<div id="all_content">
+		{% for favorite in all_items %}
+			{% with favorite.article as article %}
+				{% with 'True' as favorite_item %}
+					{% include 'main/itemresults/articleitem.html' %}
+				{% endwith %}
+			{% endwith %}
+			<hr align="center" size="2" color="#ff0000" />
+		{% endfor %}
+	</div>
+	{% for parent in list %}
+		{% for item in parent.children %}
+			<div id="art_{{ item.subject.id }}" style="display: none">
+				{% for favorite in item.articles %}
+					{% with favorite.article as article %}
+						{% with 'True' as favorite_item %}
+							{% include 'main/itemresults/articleitem.html' %}
+						{% endwith %}
+					{% endwith %}
+				{% endfor %}
+			</div>
+		{% endfor %}
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<script>
+function edit_item(event, id) {
+    
+    (event.preventDefault) ? event.preventDefault() : event.returnValue = false;
+	$.post("{{ request.get_full_path }}", {
+		edit_request : 1,
+		item_id : id,
+		csrfmiddlewaretoken: getCookie('csrftoken')
+	},
+	function(data) {
+		$("#subject_name_" + id).html(data);
+		// $("#id_parent_subject").addClass('hidden');
+		$("div[id^='menu_buttons_']").addClass('hidden');
+		$("#edit_buttons_" + id).removeClass('hidden');
+	});
+}
+
+function submit_item(event, id) {
+    
+    (event.preventDefault) ? event.preventDefault() : event.returnValue = false;
+	$.post("{{ request.get_full_path }}", {
+		edit_submit : 1,
+		item_id : id,
+		name: $('#id_name').val(),
+		author : $('#id_author').val(),
+		parent_subject : $('#id_parent_subject').val(),
+		csrfmiddlewaretoken: getCookie('csrftoken')
+	},
+	function(data) {
+		if (data == "") {
+			window.location.reload();
+		}
+		else {
+			$("#subject_name_" + id).html(data);
+			$('.control-group.error').tooltip({
+				'trigger' : 'manual'
+				}
+			)
+			$('.control-group.error').tooltip('show');
+		}
+	});
+}
+
+</script>
+<div class="row">
+	<div class="span7">
+		<h4>{{ page_title }}</h4>
+		{% if result %}
+			<table class="table">
+				{% for item in result %}
+					<tr>
+						<td><div id="subject_name_{{ item.parent.id }}"><strong>{{ item.parent.name }}</strong></div></td>
+	
+						<td width="150" height="30">
+							<div id="menu_buttons_{{ item.parent.id }}" class="pull-right">
+								<a class="btn btn-mini row-btn" onclick="edit_item(event, '{{ item.parent.id }}');" href=""><i class="icon-edit"></i> Edit</a>
+								<a class="btn btn-mini row-btn" onclick="remove_item(event, '{{ item.parent.id }}', 'subject');" href=""><i class="icon-remove"></i> Remove</a>
+							</div>
+							<div id="edit_buttons_{{ item.parent.id }}" class="hidden pull-right">
+								<a class="btn btn-mini btn-success row-btn" href="" onclick="submit_item(event, '{{ item.parent.id }}')">Save</a>
+								<a class="btn btn-mini row-btn" href="" onclick="window.location.reload();">Cancel</a>
+							</div>
+						</td>
+						
+					</tr>
+					{% if item.children %}
+						{% for subj in item.children %}
+							<tr>
+								<td>
+									<div id="subject_name_{{ subj.id }}" style="margin-left:30px;">{{ subj.name }}</div>
+								</td>
+								
+								<td width="150" height="30">
+									<div id="menu_buttons_{{ subj.id }}" class="pull-right">
+										<a class="btn btn-mini row-btn" onclick="edit_item(event, '{{ subj.id }}');" href=""><i class="icon-edit"></i> Edit</a>
+										<a class="btn btn-mini row-btn" onclick="remove_item(event, '{{ subj.id }}', 'subject');" href=""><i class="icon-remove"></i> Remove</a>
+									</div>
+									<div id="edit_buttons_{{ subj.id }}" class="hidden pull-right">
+										<a class="btn btn-mini btn-success row-btn" href="" onclick="submit_item(event, '{{ subj.id }}')">Save</a>
+										<a class="btn btn-mini row-btn" href="" onclick="window.location.reload();">Cancel</a>
+									</div>
+								</td>
+
+							</tr>
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			</table>
+		{% endif %}
+	</div>
+	<div class="span1">
+	</div>
+	<div class="span4">
+		<h4>Add subject</h4>
+		{% include 'main/forms/subjectform.html' %}
+	</div>
+</div>
+{% endblock %}

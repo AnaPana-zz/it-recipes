@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<script>
+	window.onload = function() {
+		CKEDITOR.replace('body', {
+			width : 600,
+			height: 200,
+		});
+	};
+</script>
+
+{% include 'main/forms/commentform.html' %}
+
+{% endblock %}

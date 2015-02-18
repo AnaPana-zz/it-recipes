@@ -1,0 +1,10 @@
+<ul class="nav nav-pills">
+	{% for item in dash_menu %}
+    	<li {% if item.1 == selected %}class="active"{% endif %}>
+    		<a href="{{ SITE_URL }}{{ item.0 }}">
+    			{% if item.1 == 'Settings' %}<i class="icon-cog"></i> {% endif %}
+    			{{ item.1 }} {% if item.1 != 'Settings' %}({{ item.2 }}){% endif %}
+    		</a>
+    	</li>
+    {% endfor %}
+</ul>

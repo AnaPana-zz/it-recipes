@@ -1,0 +1,43 @@
+
+<div class="grey-box">
+	{% include 'tasks/forms/searchform.html' %}
+</div>
+
+<div class="grey-box">
+	{% for parent in list %}
+		{% if parent.children %}
+			<strong>{{ parent.parent_subject.name }}</strong>
+			{% for item in parent.children %}
+				<div class="subjects-list">
+					{% if item.count != 0 %}
+						<a style="cursor:pointer" data-toggle="collapse" data-target="#{{ item.subject.id }}"><b>
+							{{ item.subject.name }} ({{ item.count }})
+						</b></a>
+					{% endif %}
+				</div>
+				<div id="{{ item.subject.id }}" class="collapse">
+					<ul class="nav articles-list">
+					{% for task in item.tasks %}
+						<li>
+							<a href="{% url task task.id %}" class="article-item" style="font-size: 12px;">
+								{{ task.name }}
+							</a>
+						</li>
+					{% endfor %}
+					</ul>
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endfor %}
+</div>
+
+	{% for tag in tags %}
+		{% if tag.amount %}
+			<a href="{% url tasks 'tags' tag.name %}" class="tag" style="font-size:
+						{% if tag.amount <= 5 %}12px
+						{% elif tag.amount > 5 and tag.amount <= 10 %}14px
+						{% elif tag.amount > 10 and tag.amount <= 15 %}16px
+						{% elif tag.amount > 15 and tag.amount <= 20 %}18px
+						{% else %}20px{% endif %}">{{ tag.name }}</a>
+		{% endif %}
+	{% endfor %}

@@ -1,0 +1,31 @@
+<script>
+	$(document).ready(function() {
+
+	$('#id_search').popover({
+		trigger: 'focus',
+		placement : 'top',
+		toggle: "popover",
+		content: "Use double quotes to find exact matchings.",
+		title: "Search tip",
+	});
+
+
+	  $(window).keydown(function(event){
+	    if((event.keyCode == 13) && $('#id_search').val() == '') {
+	      event.preventDefault();
+	      return false;
+	    }
+	  });
+	});
+
+
+</script>
+{% load extra_tags %}
+<form action="{% url main 'search' 0 %}" method="GET">
+	<div class="input-append">
+		<input class="input-medium" id="id_search" name="q" type="text" value="{{ query }}" autocomplete="off"> 
+		<button type="button" class="btn" onclick="if ($('#id_search').val() != '') {this.form.submit()}">
+			Search
+		</button>
+	</div>
+</form>

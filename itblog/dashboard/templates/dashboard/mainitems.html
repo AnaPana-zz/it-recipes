@@ -1,0 +1,45 @@
+{% extends 'dashboard/main.html' %}
+{% block dash_content %}
+<div class="row">
+	<div class="span8">
+		{% block article_items %}
+		<div id="all_content">
+			{% for article in articles %}
+				{% if page_type == 'articles' %}
+					{% include 'main/itemresults/articleitem.html' %}
+				{% elif page_type == 'drafts' %}
+					{% include 'dashboard/draftitem.html' %}
+				{% endif %}
+				<hr align="center" size="2" color="#ff0000" />
+			{% endfor %}
+		</div>
+		{% endblock %}
+	</div>
+
+	<div class="span1"></div>
+
+	<div class="span3">
+		{% if count %}
+			<div class="subjects-list">
+				<h5><a href="{% url dash page_type 0 %}" {% if subject_id == 0 %}class="bold"{% endif %}>All ({{ count }})</a></h5>
+			</div>
+		{% endif %}
+		{% block subject_tree %}
+			{% regroup subjects by subject as subject_list %}
+			<div class="subjects-list">
+				{% for subject in subject_list %}
+					{% for item in subject.list %}
+						{% if forloop.first %}
+							<h5>
+								<a href="{% url dash page_type item.subject.id %}" {% if subject_id == item.subject.id %}class="bold"{% endif %}>
+								{{ item.parent_subject }} > {{ subject.grouper }} ({{ subject.list|length }})
+								</a>
+							</h5>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</div>
+		{% endblock %}
+	</div>
+</div>
+{% endblock %}

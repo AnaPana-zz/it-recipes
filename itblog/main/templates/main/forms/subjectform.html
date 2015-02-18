@@ -1,0 +1,30 @@
+<!--form-->
+<form method="POST">{% csrf_token %}
+	
+	<div class="control-group">
+    	<div class="controls">
+			<div style="color:red">{{ form.non_field_errors }}</div>
+		</div>
+	</div>
+
+	{% for field in form.visible_fields %}
+	<div class="control-group {% if field.errors %}error{% endif %}">
+		<!-- <label class="control-label" for="inputWarning">{{ field.label }}</label> -->
+		<div class="controls">
+			{{ field }}
+			<span class="help-inline">{{ field.errors }}</span>
+		</div>
+	</div>
+	{% endfor %}
+	
+	{% for field in form.hidden_fields %}
+		{{ field }}
+	{% endfor %}
+	
+	<div class="control-group">
+    	<div class="controls">
+			<input type='submit' class="btn btn-success" value = "Save subject"/>
+			<a href="" onclick="window.location.reload()" class="btn">Cancel</a>
+		</div>
+	</div>
+</form>

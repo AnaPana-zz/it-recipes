@@ -1,0 +1,29 @@
+{% extends 'dashboard/main.html' %}
+{% block dash_content %}
+<div class="row">
+	<div class="span5">
+		<form class="form-horizontal" method="POST">{% csrf_token %}
+			{% if type == 'saved' %}
+				<div class="alert alert-success">
+					Your personal data was successfully saved.
+				</div>
+			{% endif %}
+			{% for field in form %}
+		
+			<div class="control-group">
+				<label class="control-label" for="inputEmail">{{ field.label }}</label>
+				<div class="controls">
+					{{ field }}<br/>
+					<span style="color: red">{{ field.errors }}</span>
+				</div>
+				
+			</div>
+			{% endfor %}
+			<input type="submit" class="btn btn-info" value="Save changes"/>
+			<a href="{% url privatesettings 'edit' %}" class="btn">Cancel</a>
+		</form>
+	</div>
+	<div class="span7">
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% if tasks and pagination.range_step < pagination.lst_len %}
+	<script type="text/javascript">
+	
+	function change_delta(delta) {
+		if (delta == 'All') {
+			delta = '{{ pagination.lst_len }}'
+		}
+		window.location.href = '/tasks/{{ page_type }}/{{ item_name }}/1/' + delta + '{% if query %}?q={{ query }}{% endif %}';
+	};
+	
+	</script>
+	
+	<div class="pagination">
+		<select id="select_range" name="delta" class="pagin_range input-mini" onchange="change_delta($('#select_range').find(':selected').val())" >
+			{% for range in pagination.delta_range %}
+				<option value="{{ range }}" {% if range == pagination.delta %}selected="selected"{% endif %}>{{ range }}</option>
+			{% endfor %}
+			<option value="All" {% if pagination.all %}selected="selected"{% endif %}>All</option>
+		</select>
+		<ul style="float:left;">{% with current=pagination.p %}
+			<li class="{% if current == pagination.page_range|first %}disabled{% endif %}">
+				<a {% if not current == pagination.page_range|first %}href="{% url tasks page_type item_name current|add:'-1' pagination.delta %}{% if query %}?q={{ query }}{% endif %}" {% endif %} >«</a>
+			</li>
+			
+			{% for page in pagination.page_range %}
+				{% if current < page|add:'3' and current > page|add:'-3' or forloop.first or forloop.last %}
+					<li class="{% if current == page %}active{% endif %}">
+							<a {% if not current == page %}href = "{% url tasks page_type item_name page pagination.delta %}{% if query %}?q={{ query }}{% endif %}"{% endif %}>
+								{{ page }}
+							</a>
+					</li>
+				{% elif current = page|add:'3' or current = page|add:'-3' %}
+					<li class="disabled">
+							<span>...</span>
+					</li>
+				{% endif %}
+			{% endfor %}
+			<li class="{% if current == pagination.page_range|last %}disabled{% endif %}">
+				<a {% if not current == pagination.page_range|last %}href="{% url tasks page_type item_name current|add:'1' pagination.delta %}{% if query %}?q={{ query }}{% endif %}"{% endif %}">»</a>
+			</li>
+			{% endwith %}
+		</ul>
+	</div>
+{% endif %}

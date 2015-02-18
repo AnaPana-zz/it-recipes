@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% block content %}
+	
+<div class="row">
+	<div class="span8">
+		{% load extra_tags %}
+		{% dash_menu title user %}
+	</div>
+	<div class="span4">
+		<div class="pull-right">
+		</div>
+	</div>
+</div>
+	{% block dash_content %}
+	{% endblock %}
+{% endblock %}

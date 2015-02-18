@@ -1,0 +1,8 @@
+{% extends 'main/itemresults/itemresults.html' %}
+{% block articleitems %}
+	{% for article in articles %}
+		{% include 'main/itemresults/articleitem.html' %}
+		<hr align="center" size="2" color="#ff0000" />
+	{% endfor %}
+{% endblock %}
+

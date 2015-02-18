@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<script>
+	window.onload = function() {
+		CKEDITOR.replace('body', {
+			width : 600,
+			height: 200,
+		});
+	};
+</script>
+{% with comment_dialog.parent_comment as comment %}
+	{% with 'True' as can_answer %}
+		{% include 'main/blog/commentitem.html' %}
+	{% endwith %}
+{% endwith %}
+<div class="comment-answer">
+	{% for comment in comment_dialog.children %}
+		{% include 'main/blog/commentitem.html' %}
+	{% endfor %}
+	<strong>
+		Add your answer to {{ comment_dialog.parent_comment.author }}
+	</strong>
+	{% include 'main/forms/commentform.html' %}
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<script>
+	function remove_item(event, id) {
+		(event.preventDefault) ? event.preventDefault() : event.returnValue = false;
+		var r = confirm("Do you really want to remove subject?");
+		if (r == true) {
+			$.post("{{ request.get_full_path }}", {
+				delete_request : 1,
+				item_id : id,
+				csrfmiddlewaretoken : getCookie('csrftoken')
+			}, function(data) {
+				window.location.reload();
+			});
+		}
+	}
+</script>
+
+<div class="row">
+	<div class="span8">
+		{% if list %}
+			{% for item in list %}
+			<div class="subjects-list">
+				<h4>{{ item.subject.name }}</h4>
+				<table class="table">
+					{% for link in item.links %}
+					<tr>
+						<td>
+						<p>
+							<a href="{{ link.url }}">{{ link.url|slice:":50" }} {% if link.url|length > 50 %}...{% endif %}</a> &nbsp;-&nbsp; <span class="muted">{{ link.description }}</span></td>
+						</p>
+						{% if user.is_authenticated %}
+							<td width="100" height="30">
+								<div class="pull-right">
+									<a class="btn btn-mini row-btn" onclick="remove_item(event, '{{ link.id }}');" href=""><i class="icon-remove"></i></a>
+								</div>
+							</td>
+						{% endif %}
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+	<div class="span1"></div>
+	<div class="span3">
+		{% include 'main/forms/searchform.html' %}
+		<br/>
+		<br/>
+		{% if user.is_authenticated %}
+			<h4>Add link</h4>
+			{% include 'main/forms/defaultform.html' %}
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

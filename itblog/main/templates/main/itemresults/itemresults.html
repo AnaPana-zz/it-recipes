@@ -1,0 +1,11 @@
+{% extends 'main/blog/main.html' %}
+{% block mainbox %}
+<div class="row-fluid article-items">
+	<div class="span11">
+		{% block articleitems %}
+		{% endblock %}
+		{% include 'main/base/pagination.html' %}
+	</div>
+	<div class="span1"></div>
+</div>
+{% endblock %}

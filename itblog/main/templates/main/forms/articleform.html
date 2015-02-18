@@ -1,0 +1,77 @@
+<form method="POST" id="id_article_form">{% csrf_token %}
+	<div class="control-group">
+    	<div class="controls">
+			<div style="color:red">{{ form.non_field_errors }}</div>
+		</div>
+	</div>
+
+	{% for field in form.visible_fields %}
+	<div class="control-group {% if field.errors %}error{% endif %}">
+		{{ field.label }} {{ field.help_text }}
+		<div class="controls">
+			{{ field }}
+			<span class="help">{{ field.errors }}</span>
+		</div>
+	</div>
+	{% endfor %}
+	
+	{% for field in form.hidden_fields %}
+		{{ field }}
+	{% endfor %}
+	<input type="hidden" id="id_submit_type" name="submit_type">
+	<input type="hidden" id="id_article_images" name="article_images">
+
+    	<div class="controls">
+    		<a href="#" class="btn btn-success" onclick="$('#id_submit_type').val('publish'); $('#id_is_published').val('True'); $('#id_article_form').submit();">Publish article</a>
+    		<a href="#" class="btn btn-info" onclick="$('#id_submit_type').val('draft'); $('#id_article_form').submit()">Save in drafts</a>
+    		<a href="#" class="btn" onclick="$('#id_submit_type').val('preview'); $('#id_article_form').submit()">Preview</a>
+			{% if article.id and article.is_published %}
+				<a href="{% url blog article.id %}" class="btn">Cancel</a>
+			{% elif not article.is_published %}
+				<a href="{% url dash 'drafts' 0 %}" class="btn">Cancel</a>
+			{% else %}
+				<a href="{% url blog 0 %}" class="btn">Cancel</a>
+			{% endif %}
+		</div>
+	</div>
+</form>
+
+{% if images %}
+	<div class="alert alert-info" style="margin-left:70px;">
+		<h3>Uploaded images</h3>
+		{% for file in images %}
+			<div style = "margin:10px" id="image_div_{{ file.id }}">
+				<img src='{{ file.image.url }}' style="width:50px;"/>&nbsp;&nbsp;{{ file.image.name }} 
+				<a class="btn btn-mini" onclick="remove_image(event, {{ file.id }})"><icon class="icon-minus"></i></a><br/>
+			</div>
+		{% endfor %}
+	</div>
+{% endif %}
+
+<div id="form_div" class="alert alert-info" style="margin-left:70px;">
+	<h3>Add new images</h3>
+	<form enctype="multipart/form-data" method="POST" id="image_form">
+		<input id="id_image" type="file" accept=".jpg,.png,.gif" name="image">
+		<a class="btn" onclick="upload_image(event)">Add image</a>
+		<img id="loading_info" src="{{ STATIC_URL }}img/loading_big.gif" class="hidden" width=30/>
+	</form>
+</div>
+
+<div>
+<!-- <input type="text" id="log"> -->
+<script>
+// $("#log").bind("keyup",function(e){
+    // alert(this.value + e.keyCode)
+// });
+
+$(document).ready(function() {
+	$("input").each(function() {
+		if (typeof $(this).attr('id') == 'undefined') {
+			$(this).attr('data-provide', 'typeahead').attr('data-source', '[' + '{{ tags }}'.replace(/&#39;/g, '\"') + ']')
+			// $(this).tagsinput({
+			    // confirmKeys: [32]
+			    // });
+		}
+	})
+})
+</script>

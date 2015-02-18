@@ -1,0 +1,30 @@
+{% extends 'dashboard/main.html' %}
+
+{% block dash_content %}
+	{% for solution in solutions %}
+		<div class="row"  style="font-size: 12px;">
+			<div class="span6">
+				<br/>
+				{{ solution.body|safe }}
+				<span class="muted">{{ solution.votes }} vote{{ solution.votes|pluralize }}</span> | 
+				<span class="muted">{{ solution.date|date }}</span> | 
+				<a href="{% url editsolution solution.id %}"> Edit </a> | 
+				<a href="#" onclick="remove_item(event, {{ solution.id }}, 'solution')"> Delete </a>
+			</div>
+			<div class="span4">
+				{% with solution.task as task %}
+					{% include 'tasks/taskitem_small.html' %}
+				{% endwith %}
+			</div>
+			<div class="span2">
+			</div>
+		</div>
+		<div class="row">
+			<div class="span10">
+				<hr align="center" size="2" color="#ff0000" />
+			</div>
+			<div class="span2">
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

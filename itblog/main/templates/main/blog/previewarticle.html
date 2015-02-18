@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+{% block content %}
+	<div class="row">
+		<div class="span9">
+			<div class="article-div">
+				<h3>{{ article.subject.name }} > {{ article.title }}</h3><br/>
+				<p>{{ article.body|safe }}</p>
+				<!-- <p>{{ article.date }}</p> -->
+				{% if article.author %}
+					<span class="muted"><h4><i>Author: {{ article.author.first_name }} {{ article.author.last_name }}</i></h4></span>
+				{% endif %}
+			</div>
+			<div class="row">
+				<form method="POST">{% csrf_token %}
+					<div class="pull-right">
+						<a href="{% url editarticle article.id %}" class="btn btn-info">Continue editing</a>
+						<input type="hidden" name="publish_article">
+						<input type="submit" class="btn btn-success" value="Publish article">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

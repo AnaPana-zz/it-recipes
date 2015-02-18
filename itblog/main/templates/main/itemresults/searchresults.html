@@ -1,0 +1,13 @@
+{% extends 'main/itemresults/itemresults.html' %}
+{% block articleitems %}
+	{% if articles %}
+		{% for article in articles %}
+			{% include 'main/itemresults/searcharticleitem.html' %}
+			<hr align="center" size="2" color="#ff0000" />
+		{% endfor %}
+	{% else %}
+		{% if query %}
+			<div class="alert alert-danger">There are no articles for "{{ query }}".</div>
+		{% endif %}
+	{% endif %}
+{% endblock %}

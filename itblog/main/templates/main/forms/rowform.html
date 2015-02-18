@@ -1,0 +1,23 @@
+<script>
+	$('#id_name').tooltip({
+		'trigger' : 'manual'
+		}
+	)
+</script>
+<form method="POST" action="" class="row-form">
+	{% for field in form.visible_fields %}
+		<div class="control-group {% if field.errors %}error{% endif %} help"
+			 title="{% if field.errors %}
+			 			{% for error in field.errors %}
+			 				{{ error }}
+			 			{% endfor %}
+			 		{% endif %}" style="margin:0">
+			<div class="controls">
+				{{ field }}
+			</div>
+		</div>
+	{% endfor %}
+	{% for field in form.hidden_fields %}
+		{{ field }}
+	{% endfor %}
+</form>

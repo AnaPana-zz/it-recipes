@@ -1,0 +1,13 @@
+{% extends 'tasks/main.html' %}
+{% block mainbox %}
+<div class="row-fluid article-items">
+	<div class="span11">
+	{% for task in tasks %}
+		{% include 'tasks/taskitem.html' %}
+	{% endfor %}
+	{% include 'tasks/addons/pagination.html' %}
+	</div>
+	<div class="span1"></div>
+</div>
+	
+{% endblock %}

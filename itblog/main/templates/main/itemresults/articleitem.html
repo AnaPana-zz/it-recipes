@@ -1,0 +1,55 @@
+{% load extra_tags %}
+	<div class="row-fluid">
+		<div class="span9">
+			<a href="{% url main 'subjects' article.subject.name %}" class="article-items-title">
+				<strong>{{ article.subject.name }} > </strong>
+			</a>
+			<a href="{% url blog article.id %}" class="article-items-title">
+				{{ article.title }}
+			</a>
+		</div>
+		<div class="span3">
+			<div class="pull-right">
+				{% if favorite_item == 'True' %}
+					<a onclick="remove_from_favorites(event, {{ favorite.article.id }}, 'favorite')" class="btn btn-mini favorite">
+						Remove from favorites
+					</a>
+				{% endif %}
+				
+				{% if user.is_superuser or article.author == user %}
+					<a class="btn btn-mini" href="{% url editarticle article.id %}">
+						<i class="icon-edit"></i> Edit
+					</a>
+				
+				<!-- <a class="btn btn-mini" onclick="remove_item(event, {{ article.id }}, '{{ type }}')">
+					<i class="icon-remove"></i> Remove
+				</a> -->
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{{ article.body|striptags|safe|truncatechars:700 }}<br/>
+	
+	<div class="row-fluid">
+		<div class="span7">
+			{% for tag in article.mtags.all %}
+				<a href="{% url main 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
+			{% endfor %}
+		</div>
+		<div class="span5">
+			<span class="muted pull-right">
+				<h6>
+					<i>{% with article.date|today as today %}
+						Published {{ article.date|timesince:today }} ago
+						{% endwith %}
+						by 
+						{% if article.author == user %}
+							me
+						{% else %}
+							{{ article.author.username }}
+						{% endif %}
+					</i>
+				</h6>
+			</span>
+		</div>
+	</div>

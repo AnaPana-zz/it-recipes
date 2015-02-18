@@ -1,0 +1,48 @@
+<script>
+	window.onload = function() {
+	    
+		CKEDITOR.replace( 'body', {
+			language : 'en',
+		    uiColor : '#D7E4F0',
+		    width : 542,
+			toolbar: [
+				{ name: 'basicstyles', items: ['Bold', 'Italic'] },
+				{ name: 'styles', items: [ 'Styles', 'Format'] },
+				{ name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+				{ name: 'links', items: ['Link', 'Unlink'] },
+				{ name: 'document', items: ['Source'] },
+			]
+		});
+			};
+</script>
+<form method="POST">{% csrf_token %}
+	<div class="control-group">
+    	<div class="controls">
+			<div style="color:red">{{ form.non_field_errors }}</div>
+		</div>
+	</div>
+
+	{% for field in form.visible_fields %}
+	<div class="control-group {% if field.errors %}error{% endif %}">
+		{{ field.label }} {{ field.help_text }}
+		<div class="controls">
+			{{ field }}
+			{% if field.name = 'captcha' %}
+				<a class="btn btn-small btn-refresh" onclick="refresh_captcha()"><i class="icon-refresh"></i> Refresh</a>
+			{% endif %}
+
+			<span class="help">{{ field.errors }}</span>
+		</div>
+	</div>
+	{% endfor %}
+	
+	{% for field in form.hidden_fields %}
+		{{ field }}
+	{% endfor %}
+	<div class="control-group">
+    	<div class="controls">
+    		<input class="btn btn-success" type="submit" value="Save">
+			<a href="" class="btn">Cancel</a>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,105 @@
+{% extends 'tasks/main.html' %}
+
+{% block mainbox %}
+
+<script>
+	function remove_task(event, id) {
+	    (event.preventDefault) ? event.preventDefault() : event.returnValue = false;
+	    var r=confirm("Do you really want to remove task " + "\'{{ task.name }}\'" + "?");
+	    if (r == true) {
+				$.post("{{ request.get_full_path }}", {
+					delete_request : 1,
+					type: 'task',
+					item_id : id,
+					csrfmiddlewaretoken: getCookie('csrftoken')
+				},
+				function(data) {
+					window.location.href = "{% url tasks 'all' 0 %}";
+				});
+		}
+	}
+	
+	function vote(event, type, item_id, value) {
+		(event.preventDefault) ? event.preventDefault() : event.returnValue = false;
+		$.post("{{ request.get_full_path }}", {
+			vote_request : 1,
+			type: type,
+			item_id: item_id,
+			value : value,
+			csrfmiddlewaretoken: getCookie('csrftoken')
+		},
+		function(data) {
+			window.location.reload();
+		});
+	}
+</script>
+
+	<div class="row-fluid">
+		<div class="span1">
+			<div style="margin-left: 6px;">
+				<a href="#" onclick="vote(event, 'task', '{{ task.id }}', '1')"><div class="arrow-up"></div></a>
+				<div style="margin-left: 6px">
+					<h2>{{ task.votes }}</h2>
+				</div>
+				<a href="#" onclick="vote(event, 'task', '{{ task.id }}', '-1')"><div class="arrow-down"></div></a>
+			</div>
+		</div>
+		<div class="span10">
+			<div class="row-fluid">
+				<a class="article-title" href="{% url tasks 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
+				<span class="article-title">{{ task.name }}</span>
+			
+				<p> 
+					{{ task.body|safe }}
+				</p>
+				{% if task %}
+					{% for tag in task.tags.all %}
+						<a href="{% url tasks 'tags' tag.name %}"><div class="label label-info">{{ tag.name }}</div></a>
+					{% endfor %}
+					<span class="muted pull-right">
+						<i>Author: {{ task.author.username }}</i>
+					</span><br/>
+					<span class="muted pull-right">
+						<i>{{ task.date }}</i>
+					</span>
+				{% endif %}
+				<div class="articles-navigation">
+					{% if previous %}
+						<div style="float: left; text-align: left">
+							<a href="{% url blog previous.id %}"><< {{ previous.title }}</a>
+						</div>
+					{% endif %}
+					
+					{% if next %}
+						<div style="float: right; text-align: right">
+							<a href="{% url blog next.id %}">{{ next.title }} >></a>
+						</div>
+					{% endif %}
+				</div>
+				<div class="pull-right">
+					{% if task.author == user or user.is_superuser %}
+						<a href="{% url edittask task.id %}" class="btn btn-mini">Edit task</a>
+						<a href="#" class="btn btn-mini btn-danger" onclick="remove_task(event, '{{ task.id }}')">Delete task</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<h3>{{ solutions|length }} Solution{{ solutions|length|pluralize }}</h3>
+	<br/>
+	{% if user_can_view_solutions or user.is_superuser or task.subject.name != 'Linux training' %}
+		{% for s in solutions %}
+			{% with s.solution as solution %}
+				{% with s.comments as comments %}
+					{% include 'tasks/solutionitem.html' %}
+				{% endwith %}
+			{% endwith %}
+		{% endfor %}
+	{% else %}
+		<div class="alert alert-info">For viewing solutions you should be authenticated and have your own solution for this task.</div>
+	{% endif %}
+	<br/>
+	<h4>Your solution:</h4>
+	<div class="alert alert-warning" style="width:500px;">To highlight code snippets choose "Format->Formatted" or use "pre" tag for source html code.</div>
+	{% include 'tasks/forms/defaultform.html' %}
+{% endblock %}

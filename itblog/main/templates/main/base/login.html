@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>IT Blog</title>
+
+		<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet" media="screen">
+		<link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="{{ STATIC_URL }}css/bootstrap-tagmanager.css" rel="stylesheet" media="screen">
+		<link href="{{ STATIC_URL }}css/jquery-ui.css" rel="stylesheet" />
+		<link href="{{ STATIC_URL }}js/ckeditor/contents.css" rel="stylesheet" />
+		<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js" ></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.9.2.custom.min.js" ></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}js/django-coockies.js" ></script>
+		<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+		<script src="{{ STATIC_URL }}js/ckeditor/ckeditor.js"></script>
+	</head>
+	<body class="body">
+		<div class="container">
+			<div class="row">
+				<div style="margin-left: 150px; margin-top: 150px;">
+					{% include 'main/forms/loginform.html' %}
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,49 @@
+<script>
+function publish_article(id, url){
+	$.post('', {
+		publish_request : 1,
+		item_id : id,
+		csrfmiddlewaretoken: getCookie('csrftoken')},
+		function(data) {
+			document.location.href = url
+		});
+}
+</script>
+<div class="row-fluid">
+	<div class="span9">
+			<strong>{{ article.subject.name }} > </strong>
+		<!-- <a href="{% url editarticle article.id %}" class="article-items-title"> -->
+			{{ article.title }}
+		<!-- </a> -->
+	</div>
+	<div class="span3">
+		<div class="pull-right">
+			{% if article.author == user %}
+				<a class="btn btn-mini" href="{% url editarticle article.id %}">
+					<i class="icon-edit"></i> Edit
+				</a>
+				<a href="#" class="btn btn-mini" onclick="publish_article('{{ article.id }}', '{% url blog article.id %}')">
+					<i class="icon-ok"></i> Publish
+				</a>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{{ article.body|striptags|safe|truncatechars:300 }}<br/>
+
+<div class="row-fluid">
+	<div class="span8">
+		{% for tag in article.mtags.all %}
+				<div class="label label-info tag-item">
+					{{ tag }}
+				</div>
+		{% endfor %}
+	</div>
+	<div class="span4">
+		<span class="muted pull-right">
+			<h6>
+				<i>Created at {{ article.date }}</i>
+			</h6>
+		</span>
+	</div>
+</div>

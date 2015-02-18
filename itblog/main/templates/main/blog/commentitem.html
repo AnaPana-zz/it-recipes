@@ -1,0 +1,41 @@
+{% load extra_tags %}
+<div class="discussion-bubble js-comment-container">
+	<!-- <a href="#"> -->
+    	<img class="discussion-bubble-avatar" src="{{ STATIC_URL }}img/avatars/{{ comment.author }}.jpg" onerror="this.src='{{ STATIC_URL }}img/icon-user.png';" width="48" height="48"/>
+	<!-- </a> -->
+	<div class="discussion-bubble-content bubble">
+		<div class="discussion-bubble-inner">
+			<div class="wgt-block">
+				<div class="wgt-header">
+					<div class="login">
+						{% if comment.author %}{{ comment.author }}{% else %}{{ comment.name }}{% endif %}
+						{% with article.date|today as today %}
+								 &middot; 
+								 <span style="color:#AAAAAA; font-weight: normal;">
+								 	{{ comment.date|timesince:today }} ago
+								 </span>
+						{% endwith %}
+					</div>
+					{% if user.is_authenticated %}
+						<div class="wgt-buttons">
+							{% if user.is_superuser or user == comment.author or user == comment.article.author %}
+								<a class="btn btn-mini" href="{% url editcomment comment.id %}"><i class="icon-edit"></i> Edit</a>
+								<a href="#" class="btn btn-mini" onclick="remove_item(event, {{ comment.id }}, 'comment')"><i class="icon-remove"></i> Remove</a>
+							{% endif %}
+						</div>
+					{% endif %}
+				</div>
+				<div class="wgt-body">
+					{{ comment.body|safe }}
+				</div>
+				{% if can_answer == 'True' %}
+					<div class="wgt-footer">
+						<div class="wgt-buttons pull-right">
+							<a href="{% url commentdialog comment.id %}" class="btn btn-mini btn-success"> Answer</a>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

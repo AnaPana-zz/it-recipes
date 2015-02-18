@@ -1,0 +1,87 @@
+{% load extra_tags %}
+<script>
+	function remove_solution(event, id) {
+	   (event.preventDefault) ? event.preventDefault() : event.returnValue = false;
+	    var author = "{{ solution.author }}"
+	    if (author == 'None') {
+	    	author = "{{ solution.author_name }}"
+	    }
+	    var r=confirm("Do you really want to remove solution from " + author + "?");
+	    if (r == true) {
+				$.post("{{ request.get_full_path }}", {
+					delete_request : 1,
+					type: 'solution',
+					item_id : id,
+					csrfmiddlewaretoken: getCookie('csrftoken')
+				},
+				function(data) {
+					window.location.href = "{% url task task.id %}";
+				});
+		}
+	}
+</script>
+
+<div class="row-fluid">
+	<div class="span1">
+		<div style="margin-left: 6px;">
+			<a href="#" onclick="vote(event, 'solution', '{{ solution.id }}', '1')"><div class="arrow-up"></div></a>
+			<div style="margin-left: 6px">
+				<h2>{{ solution.votes }}</h2>
+			</div>
+			<a href="#" onclick="vote(event, 'solution', '{{ solution.id }}', '-1')"><div class="arrow-down"></div></a>
+		</div>
+	</div>
+	<div class="span10">
+		<div class="row-fluid">
+			<p> 
+				{{ solution.body|safe }}
+			</p>
+			<span class="muted pull-right">
+				<i>Author: 
+					{% if solution.author %}
+						{{ solution.author.username }}
+					{% else %}
+						{{ solution.author_name }}
+					{% endif %}
+				</i>
+			</span><br/>
+			<span class="muted pull-right">
+				<i>{{ solution.date }}</i>
+			</span><br/>
+			<div class="pull-right">
+				{% if solution.author == user or user.is_superuser %}
+					<a href="{% url editsolution solution.id %}" class="btn btn-mini">Edit solution</a>
+					<a href="#" class="btn btn-mini btn-danger" onclick="remove_solution(event, '{{ solution.id }}')">Delete solution</a>
+				{% endif %}
+			</div>
+		</div>
+		<div style="margin:20px 0 0 20px">
+			{% for c in comments %}
+				<hr style="margin:4px 0 4px 0">
+				<div class="comment-div">
+					{{ c.body|replacepre|safe }} – <span style="color: #1F80D7">
+					{% if c.author %}
+						{{ c.author.username }}
+					{% else %}
+						{{ c.author_name }}
+					{% endif %}</span> <span class="muted">{{ c.date|date:"M d'y \a\t H:i" }}</span>
+					
+					{% if c.author == user or user.is_superuser %}
+						<a href="{% url editsolutioncomment c.id %}"> Edit </a> | 
+					{% endif %}
+					{% if c.author == user or user.is_superuser or c.solution.author == user %}
+						<a href="#" onclick="remove_item(event, {{ c.id }}, 'solution comment')"> Delete </a>
+					{% endif %}
+				</div>
+			{% endfor %}
+			<div style="margin-top: 20px">
+				<a href="{% url addsolutioncomment solution.id %}" class="btn btn-mini">Add comment</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<hr size="2" color="#ff0000" />
+	</div>
+</div>

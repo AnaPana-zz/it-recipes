@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<script>
+	window.onload = function() {
+		CKEDITOR.replace('body', {
+			width : 1200,
+			height: 600,
+		});
+	};
+</script>
+	{% include 'main/forms/articleform.html' %}
+{% endblock %}

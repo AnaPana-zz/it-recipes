@@ -1,0 +1,52 @@
+{% load extra_tags %}
+<div class="row-fluid">
+	<div class="span1">
+		<div style="margin-top: 20px;">
+			<h3 align="center">{{ task.votes }}</h3> 
+			<h5 align="center">vote{{ task.votes|pluralize }}</h5>
+		</div>
+	</div>
+	<div class="span1">
+		<div style="margin-top: 20px;">{{ task.solution }}
+			<h3 align="center">{{ task.solutions|length }}</h3>
+			<h5 align="center">solution{{ task.solutions|length|pluralize }}</h5>
+		</div>
+	</div>
+	<div class="span10">
+		<a class="article-title" href="{% url tasks 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
+		<a href="{% url task task.id %}" class="article-title">
+			{{ task.name }}
+		</a><br/>
+		<div class="row-fluid">
+			<div class="span8">
+				{{ task.body|striptags|safe|truncatechars:400 }}
+			</div>
+			<div class="span4">
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span8">
+				{% for tag in task.tags.all %}
+					<a href="{% url tasks 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
+				{% endfor %}
+			</div>
+			<div class="span4">
+				<div style="text-align: right">
+					<span class="muted">
+						<i>{% with task.date|today as today %}
+								{{ task.date|timesince:today }} ago
+							{% endwith %}<br/>
+							Author :
+							{% if task.author == user %}
+								me
+							{% else %}
+								{{ task.author.username }}
+							{% endif %}
+						</i>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<hr size="2" color="#ff0000" />

@@ -1,0 +1,29 @@
+<form method="POST">{% csrf_token %}
+	
+	<div class="control-group">
+    	<div class="controls">
+			<div style="color:red">{{ form.non_field_errors }}</div>
+		</div>
+	</div>
+
+	{% for field in form.visible_fields %}
+	<div class="control-group {% if field.errors %}error{% endif %}">
+		{{ field.label }}
+		<div class="controls">
+			{{ field }}
+			<span class="help">{{ field.errors }}</span>
+		</div>
+	</div>
+	{% endfor %}
+	
+	{% for field in form.hidden_fields %}
+		{{ field }}
+	{% endfor %}
+	
+	<div class="control-group">
+    	<div class="controls">
+			<input type='submit' class="btn btn-success" value = "{{ submit_title }}"/>
+			<a href="{{ request.get_full_path }}" class="btn">{{ cancel_title }}</a>
+		</div>
+	</div>
+</form>
