@@ -7,3 +7,4 @@
 .pydevproject
 .openshift
 itblog/credentials.py
+*.log
