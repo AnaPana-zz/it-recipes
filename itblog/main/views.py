@@ -103,8 +103,12 @@ def blog(request, article_id=0):
     context_dict['query'] = request.GET.get('q', '')
 
     if not int(article_id):
-        latest_id = Article.objects.filter(is_published=True).latest('pk').id
-        return redirect('blog', int(latest_id))
+        try:
+		latest_id = Article.objects.filter(is_published=True).latest('pk').id
+        except Article.DoesNotExist:
+		return redirect('subjects')
+	else:
+		return redirect('blog', int(latest_id))
 
     try:
         article = Article.objects.get(pk=int(article_id), is_published=True)
