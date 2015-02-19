@@ -2,9 +2,3 @@
 
 cd ${OPENSHIFT_REPO_DIR}/itblog
 python manage.py collectstatic --noinput
-
-svn co http://svn.navi.cx/misc/trunk/pycaptcha/
-cd pycaptcha
-python setup.py install
-cd ..
-rm -rf pycaptcha
