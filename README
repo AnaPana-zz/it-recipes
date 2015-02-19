@@ -12,6 +12,8 @@ Deploying app:
 10. python manage.py collectstatic on the server
 11. Add first article / TODO: fix this bug.
 
+TODO: create action hooks for 7-11.
+
 For local development:
 
 1. Add the following environment variables to ~/.profile and source it.
