@@ -36,12 +36,12 @@ if ON_OPENSHIFT:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': os.environ['ITBLOG_MYSQL_DB_NAME'],  # Or path to database file if using sqlite3.
-            'USER': os.environ['ITBLOG_MYSQL_DB_USERNAME'],                      # Not used with sqlite3.
-            'PASSWORD': os.environ['ITBLOG_MYSQL_DB_PASSWORD'],                  # Not used with sqlite3.
-            'HOST': os.environ['ITBLOG_MYSQL_DB_HOST'],                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': os.environ['ITBLOG_MYSQL_DB_PORT'],                      # Set to empty string for default. Not used with sqlite3.
+            'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'blog.db',
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': '',
+            'PORT': '',
         }
     }
 
