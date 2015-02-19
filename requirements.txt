@@ -4,3 +4,6 @@ PIL==1.1.7
 django-richtext-blog==0.8.6
 django-simple-captcha==0.4.1
 ipython==3.0.0rc1
+pytest==2.6.4
+selenium==2.44.0
+mock==1.0.1

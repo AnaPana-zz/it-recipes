@@ -1,7 +1,7 @@
 from main.models import *
 from tasks.models import Solution
 from main.forms import PersonalForm, UserForm
-from django.views.generic.simple import direct_to_template
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -37,7 +37,7 @@ def articles(request, page_type, subject_id):
             article.is_published = True
             article.save()
     
-    return direct_to_template(request, 'dashboard/articles.html',
+    return render(request, 'dashboard/articles.html',
                       {
                        'title' : title,
                        'articles' : articles,
@@ -54,7 +54,7 @@ def my_comments(request):
     if request.POST.get('delete_request'):
         comment = Comment.objects.get(pk=int(request.POST['item_id']))
         comment.delete()
-    return direct_to_template(request, 'dashboard/mycomments.html',
+    return render(request, 'dashboard/mycomments.html',
                                                  {
                                                   'title' : 'My comments',
                                                   'comments' : comments
@@ -68,7 +68,7 @@ def comments_to_me(request):
     if request.POST.get('delete_request'):
         comment = Comment.objects.get(pk=int(request.POST['item_id']))
         comment.delete()
-    return direct_to_template(request, 'dashboard/commentstome.html',
+    return render(request, 'dashboard/commentstome.html',
                                                 {
                                                  'title' : 'Comments to me',
                                                  'comments' : comments
@@ -81,7 +81,7 @@ def my_solutions(request):
     if request.POST.get('delete_request'):
         solution = Solution.objects.get(pk=int(request.POST['item_id']))
         solution.delete()
-    return direct_to_template(request, 'dashboard/mysolutions.html',
+    return render(request, 'dashboard/mysolutions.html',
                                                  {
                                                   'title' : 'My solutions',
                                                   'solutions' : solutions
@@ -110,7 +110,7 @@ def favorites(request, page_type, subject_id):
         if request.POST['type'] == 'favorite':
             favorite = Favorite.objects.get(article_id=int(request.POST['item_id']))
             favorite.delete()
-    return direct_to_template(request, 'dashboard/favorites.html',
+    return render(request, 'dashboard/favorites.html',
                                                 {
                                                  'all_items' : all_favorites,
                                                  'title' : 'Favorites',
@@ -139,7 +139,7 @@ def private_settings(request, type):
                                      'first_name' : user.first_name,
                                      'last_name' : user.last_name,
                                      'email' : user.email})
-    return direct_to_template(request, 'dashboard/privatesettings.html',
+    return render(request, 'dashboard/privatesettings.html',
                               {'title' : 'Settings',
                                'form' : form,
                                'type' : type})

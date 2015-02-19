@@ -1,6 +1,136 @@
-from django.test import LiveServerTestCase
+from django.test import TestCase, LiveServerTestCase, Client
+from django.contrib.auth.models import User
+
+from mock import MagicMock, patch
 from selenium.webdriver.firefox.webdriver import WebDriver
-import time
+
+from .views import get_comment_dialog, get_comments_tree, get_recent_articles
+from .models import Subject, UsefulLink
+from .forms import UsefulLinkForm
+
+
+class TestResponses(TestCase):
+
+    def test_home_url(self):
+        response = self.client.get('/', follow = True)
+        self.assertEqual(response.redirect_chain, 
+                         [('http://testserver/articles/recent/0', 301)],)
+ 
+    def test_unexisted_article_url(self):
+        response = self.client.get('/articles/blog/999999', follow = True)
+        self.assertEqual(response.redirect_chain, 
+                         [('http://testserver/articles/recent/0', 302)],)
+
+    def test_subjects_url(self):
+        response = self.client.get('/links')
+        self.assertEqual(response.status_code, 200)
+
+    def test_links_url(self):
+        response = self.client.get('/links')
+        self.assertEqual(response.status_code, 200)
+
+    def test_about_url(self):
+        response = self.client.get('/about')
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_url(self):
+        response = self.client.get('/login')
+        self.assertEqual(response.status_code, 200)
+
+    def test_logout_url(self):
+        response = self.client.get('/logout', follow=True)
+        self.assertEqual(response.redirect_chain, 
+                         [('http://testserver/', 302),
+                          ('http://testserver/articles/recent/0', 301)
+                          ])
+
+
+class TestStaticFunctions(TestCase):
+
+    @patch('main.models.Comment.objects')
+    def test_get_comment_dialog(self, c_objects):
+        comment_id = 2
+        c_objects.get.return_value = {'id' : comment_id}
+        c_objects.filter.return_value = {}
+        result = get_comment_dialog(comment_id)
+        self.assertEqual(result,
+                         {'parent_comment' : {'id' : comment_id},
+                          'children' : []})
+
+    @patch('main.models.Comment.objects.filter')
+    def test_get_comments_tree(self, c_objects):
+        c = c_objects.return_value
+        c.order_by.return_value = [1,2,3]
+        result = get_comments_tree(2)
+        self.assertEqual(result,
+                         [{'parent_comment' : 1, 'children' : c},
+                          {'parent_comment' : 2, 'children' : c},
+                          {'parent_comment' : 3, 'children' : c}])
+
+    @patch('main.models.Article.objects.filter')
+    def test_get_recent_articles(self, a_objects):
+        a = a_objects.return_value
+        a.order_by.return_value = [1,2,3,4,5]
+        result = get_recent_articles()
+        self.assertEqual(result, [1,2,3])
+
+
+class TestUsefulLinks(TestCase):
+    
+    def setUp(self):
+        self.subject = Subject.objects.create(name='python')
+
+    def test_add_link_with_model(self):
+        link = UsefulLink.objects.create(subject=self.subject,
+                                         url='http://localhost',
+                                         description='my link'
+                                         )
+        response = self.client.get('/links')
+        self.assertContains(response, 'my link')
+    
+    def test_add_link_with_post(self):
+        response = self.client.post('/links', {'subject': self.subject,
+                                               'url': 'http://localhost',
+                                               'description' : 'my link'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_link_with_post(self):
+        link = UsefulLink.objects.create(subject=self.subject,
+                                         url='http://localhost',
+                                         description='my link'
+                                         )
+        self.client.post('/links', {'delete_request': 1,
+                                    'item_id': link.id})
+        response = self.client.get('/links')
+        self.assertNotContains(response, 'my link')
+        self.assertEqual(response.status_code, 200)
+
+    def test_valid_data(self):
+        form = UsefulLinkForm({
+            'url': 'http://localhost',
+            'subject': self.subject.id,
+            'description': 'my link',
+        })
+        self.assertTrue(form.is_valid())
+        link = form.save()
+        self.assertEqual(link.url, 'http://localhost/')
+        self.assertEqual(link.subject, self.subject)
+        self.assertEqual(link.description, 'my link')
+    
+    def test_blank_data(self):
+        form = UsefulLinkForm({})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            'url': [u'This field is required.'],
+            'subject': [u'This field is required.'],
+        })
+        
+    def test_errors_on_page(self):
+        user = User.objects.create_superuser('aaa', 'aaa@mail.ru', '123')
+        response = self.client.post('/login', {'username': 'aaa',
+                                               'password' : '123'})
+        response = self.client.post('/links', {})
+        self.assertContains(response, 'This field is required.')
 
 # class SeleniumTestLoginForm(LiveServerTestCase):
 #     fixtures = ['user-data.json']
@@ -36,83 +166,24 @@ import time
 #         time.sleep(2)
 #         print '\ntest_invalid_login'
 #         self.assertTrue(self.selenium.find_element_by_xpath("//li[contains(text(), 'Please enter a correct username and password.')]"))
-
-SITE_URL = '192.168.56.98:8080'
-
-from django.utils import unittest
-from main.models import Subject, Article
-from django.contrib.auth.models import User
-
-class ArticleTestCase(unittest.TestCase):
-    def setUp(self):
-        print "Testing Subject, User, Article"
-        self.user = User.objects.create(username="TestUser",
-                                        email="bla@mail.com",
-                                        password="pwd")
-        self.subj = Subject.objects.create(name="TestSubj")
-        self.art = Article.objects.create(title="TestArticle",
-                                          body="TestBody",
-                                          subject=self.subj,
-                                          author=self.user)
-
-    def testArticle(self):
-        self.assertEqual(self.art.title, "TestArticle")
-
-
-from django.test import TestCase
-from django.test.client import Client
-from django.core.urlresolvers import reverse
-
-class SimpleTest(TestCase):
-
-    def test_add_article(self):
-        response = self.client.post(reverse('main.views.add_article'),
-                                    {
-                                     'title': 'Test article',
-                                     'body': 'Test article body',
-                                     'subject' : 2,
-                                     'tags' : 'python,django'
-                                    }, follow=True)
-        print '\nTest adding article URL'
-        self.assertEqual(response.status_code, 200)
-
-    # Testing page responses
-    def test_blog(self):
-        response = self.client.get(reverse('main.views.blog', args=(0,)))
-        print '\nTest blog URL'
-        self.assertEqual(response.status_code, 200)
-
-    def test_about(self):
-        response = self.client.get(reverse('main.views.about'))
-        print '\nTest about URL'
-        self.assertEqual(response.status_code, 200)
- 
-    def test_tag_results(self):
-        response = self.client.get(reverse('main.views.tag_results', args=('python',)))
-        print '\nTest tag results URL'
-        self.assertEqual(response.status_code, 200)
-
-    def test_dashboard_articles(self):
-        response = self.client.get(reverse('dashboard.views.articles'))
-        print '\nTest dashboard articles'
-        self.assertEqual(response.status_code, 302)
- 
-    def test_dashboard_drafts(self):
-        response = self.client.get(reverse('dashboard.views.drafts'))
-        print '\nTest dashboard drafts'
-        self.assertEqual(response.status_code, 302)
-
-    def test_dashboard_mycomments(self):
-        response = self.client.get(reverse('dashboard.views.my_comments'))
-        print '\nTest dashboard mycomments'
-        self.assertEqual(response.status_code, 302)
-
-    def test_dashboard_commentstome(self):
-        response = self.client.get(reverse('dashboard.views.comments_to_me'))
-        print '\nTest dashboard commentstome'
-        self.assertEqual(response.status_code, 302)
-
-    def test_dashboard_favorites(self):
-        response = self.client.get(reverse('dashboard.views.favorites'))
-        print '\nTest dashboard favorites'
-        self.assertEqual(response.status_code, 302)
+# 
+# SITE_URL = '192.168.56.98:8080'
+# 
+# from django.utils import unittest
+# from main.models import Subject, Article
+# from django.contrib.auth.models import User
+# 
+# class ArticleTestCase(unittest.TestCase):
+#     def setUp(self):
+#         print "Testing Subject, User, Article"
+#         self.user = User.objects.create(username="TestUser",
+#                                         email="bla@mail.com",
+#                                         password="pwd")
+#         self.subj = Subject.objects.create(name="TestSubj")
+#         self.art = Article.objects.create(title="TestArticle",
+#                                           body="TestBody",
+#                                           subject=self.subj,
+#                                           author=self.user)
+# 
+#     def testArticle(self):
+#         self.assertEqual(self.art.title, "TestArticle")

@@ -1,6 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
-from django.views.generic import RedirectView
-from django.core.urlresolvers import reverse_lazy
+from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^(?P<page_type>tags|subjects|search|all)/(?P<item_name>[A-Za-z0-9_\-\.&% ]+)$', 'tasks.views.main', name='tasks'),
