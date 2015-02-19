@@ -6,7 +6,11 @@ Deploying app:
 4. Fork this repo.
 5. Add this repo as second on your local machine (http://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes#Adding-Remote-Repositories)
 6. Make changes in wsgi.py file (http://www.it-recipes.com/articles/blog/204)
-7. For local development the following environment variables are needed:
+
+
+For local development:
+
+1. Add the following environment variables to ~/.profile and source it.
 
 ITBLOG_MYSQL_DB_NAME='itblog' && export ITBLOG_MYSQL_DB_NAME
 ITBLOG_MYSQL_DB_USERNAME='my-user' && export ITBLOG_MYSQL_DB_USERNAME
@@ -21,5 +25,9 @@ SMTP_PORT='2525' && export SMTP_PORT
 ITBLOG_APP_HOST='192.168.56.110' && export ITBLOG_APP_HOST
 ITBLOG_APP_PORT='8080' && export ITBLOG_APP_PORT
 
-9. You'll also need to install MySQL and create database and user with credentials that are mentioned.
+2. You'll also need to install MySQL and create database and user with credentials that are mentioned
+(probably you'll need to install all packages commented in the bottom of requirements.txt).
+
+3. Create python virtual environment (http://docs.python-guide.org/en/latest/dev/virtualenvs) and install requirements:
+pip install -r requirements.txt
 
