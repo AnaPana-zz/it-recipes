@@ -2,10 +2,4 @@
 cd ${OPENSHIFT_REPO_DIR}/itblog
 python manage.py syncdb --noinput
 
-{
-mysql -u${OPENSHIFT_MYSQL_DB_USERNAME} -p${OPENSHIFT_MYSQL_DB_PASSWORD} -h ${OPENSHIFT_MYSQL_DB_HOST} -P ${OPENSHIFT_MYSQL_DB_PORT} -e "use blog; create table captcha_captchastore(id int NOT NULL AUTO_INCREMENT, challenge varchar(32) NOT NULL, response varchar(32) NOT NULL, hashkey varchar(40) NOT NULL, expiration datetime NOT NULL, PRIMARY KEY (id) );"
-} || {
-echo "captcha_captchastore table already exists... Skip."
-}
-
 echo "from django.contrib.auth.models import User; u = User.objects.create_superuser('admin', 'myemail@example.com', '123');" | python manage.py shell
