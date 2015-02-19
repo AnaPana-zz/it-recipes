@@ -5,7 +5,7 @@ from mock import MagicMock, patch
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 from .views import get_comment_dialog, get_comments_tree, get_recent_articles
-from .models import Subject, UsefulLink
+from .models import Subject, UsefulLink, Article
 from .forms import UsefulLinkForm
 
 
@@ -20,6 +20,15 @@ class TestResponses(TestCase):
         response = self.client.get('/articles/blog/999999', follow = True)
         self.assertEqual(response.redirect_chain, 
                          [('http://testserver/articles/recent/0', 302)],)
+
+#     def test_existed_article_url(self):
+#         user = User.objects.create_superuser('bbb', 'aaa@mail.ru', '123')
+#         subject = Subject.objects.create(name='python')
+#         article = Article.objects.create(title='My First Article', body='Body',
+#                                          author=user, subject=subject)
+#         response = self.client.get('/articles/blog/1')
+#         self.assertContains(response, 'My First Article')
+#         self.assertEqual(response.status_code, 200)
 
     def test_subjects_url(self):
         response = self.client.get('/links')
