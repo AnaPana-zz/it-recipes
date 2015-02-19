@@ -14,7 +14,7 @@
 					csrfmiddlewaretoken: getCookie('csrftoken')
 				},
 				function(data) {
-					window.location.href = "{% url tasks 'all' 0 %}";
+					window.location.href = "{% url 'tasks' 'all' 0 %}";
 				});
 		}
 	}
@@ -46,7 +46,7 @@
 		</div>
 		<div class="span10">
 			<div class="row-fluid">
-				<a class="article-title" href="{% url tasks 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
+				<a class="article-title" href="{% url 'tasks' 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
 				<span class="article-title">{{ task.name }}</span>
 			
 				<p> 
@@ -54,7 +54,7 @@
 				</p>
 				{% if task %}
 					{% for tag in task.tags.all %}
-						<a href="{% url tasks 'tags' tag.name %}"><div class="label label-info">{{ tag.name }}</div></a>
+						<a href="{% url 'tasks' 'tags' tag.name %}"><div class="label label-info">{{ tag.name }}</div></a>
 					{% endfor %}
 					<span class="muted pull-right">
 						<i>Author: {{ task.author.username }}</i>
@@ -66,19 +66,19 @@
 				<div class="articles-navigation">
 					{% if previous %}
 						<div style="float: left; text-align: left">
-							<a href="{% url blog previous.id %}"><< {{ previous.title }}</a>
+							<a href="{% url 'blog' previous.id %}"><< {{ previous.title }}</a>
 						</div>
 					{% endif %}
 					
 					{% if next %}
 						<div style="float: right; text-align: right">
-							<a href="{% url blog next.id %}">{{ next.title }} >></a>
+							<a href="{% url 'blog' next.id %}">{{ next.title }} >></a>
 						</div>
 					{% endif %}
 				</div>
 				<div class="pull-right">
 					{% if task.author == user or user.is_superuser %}
-						<a href="{% url edittask task.id %}" class="btn btn-mini">Edit task</a>
+						<a href="{% url 'edittask' task.id %}" class="btn btn-mini">Edit task</a>
 						<a href="#" class="btn btn-mini btn-danger" onclick="remove_task(event, '{{ task.id }}')">Delete task</a>
 					{% endif %}
 				</div>

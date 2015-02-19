@@ -1,17 +1,17 @@
 {% load extra_tags %}
 	<div class="row-fluid">
 		<div class="span9">
-			<a href="{% url main 'subjects' article.subject.name %}" class="article-items-title">
+			<a href="{% url 'main' 'subjects' article.subject.name %}" class="article-items-title">
 				<strong>{{ article.subject.name|highlight:query }} > </strong>
 			</a>
-			<a href="{% url blog article.id %}" class="article-items-title">
+			<a href="{% url 'blog' article.id %}" class="article-items-title">
 				{{ article.title|highlight:query }}
 			</a>
 		</div>
 		<div class="span3">
 			<div class="pull-right">
     			{% if user.is_superuser or article.author == user %}
-					<a class="btn btn-mini" href="{% url editarticle article.id %}">
+					<a class="btn btn-mini" href="{% url 'editarticle' article.id %}">
 						<i class="icon-edit"></i> Edit
 					</a>
 				{% endif %}
@@ -23,7 +23,7 @@
 	<div class="row-fluid">
 		<div class="span7">
 			{% for tag in article.mtags.all %}
-				<a href="{% url main 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
+				<a href="{% url 'main' 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
 			{% endfor %}
 		</div>
 		<div class="span5">

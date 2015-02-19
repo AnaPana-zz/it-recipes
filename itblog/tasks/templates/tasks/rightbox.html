@@ -19,7 +19,7 @@
 					<ul class="nav articles-list">
 					{% for task in item.tasks %}
 						<li>
-							<a href="{% url task task.id %}" class="article-item" style="font-size: 12px;">
+							<a href="{% url 'task' task.id %}" class="article-item" style="font-size: 12px;">
 								{{ task.name }}
 							</a>
 						</li>
@@ -33,7 +33,7 @@
 
 	{% for tag in tags %}
 		{% if tag.amount %}
-			<a href="{% url tasks 'tags' tag.name %}" class="tag" style="font-size:
+			<a href="{% url 'tasks' 'tags' tag.name %}" class="tag" style="font-size:
 						{% if tag.amount <= 5 %}12px
 						{% elif tag.amount > 5 and tag.amount <= 10 %}14px
 						{% elif tag.amount > 10 and tag.amount <= 15 %}16px

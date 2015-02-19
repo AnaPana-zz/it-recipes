@@ -26,11 +26,11 @@
     		<a href="#" class="btn btn-info" onclick="$('#id_submit_type').val('draft'); $('#id_article_form').submit()">Save in drafts</a>
     		<a href="#" class="btn" onclick="$('#id_submit_type').val('preview'); $('#id_article_form').submit()">Preview</a>
 			{% if article.id and article.is_published %}
-				<a href="{% url blog article.id %}" class="btn">Cancel</a>
+				<a href="{% url 'blog' article.id %}" class="btn">Cancel</a>
 			{% elif not article.is_published %}
-				<a href="{% url dash 'drafts' 0 %}" class="btn">Cancel</a>
+				<a href="{% url 'dash' 'drafts' 0 %}" class="btn">Cancel</a>
 			{% else %}
-				<a href="{% url blog 0 %}" class="btn">Cancel</a>
+				<a href="{% url 'blog' 0 %}" class="btn">Cancel</a>
 			{% endif %}
 		</div>
 	</div>

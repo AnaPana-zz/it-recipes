@@ -8,7 +8,7 @@
 				{{ solution.body|safe }}
 				<span class="muted">{{ solution.votes }} vote{{ solution.votes|pluralize }}</span> | 
 				<span class="muted">{{ solution.date|date }}</span> | 
-				<a href="{% url editsolution solution.id %}"> Edit </a> | 
+				<a href="{% url 'editsolution' solution.id %}"> Edit </a> | 
 				<a href="#" onclick="remove_item(event, {{ solution.id }}, 'solution')"> Delete </a>
 			</div>
 			<div class="span4">

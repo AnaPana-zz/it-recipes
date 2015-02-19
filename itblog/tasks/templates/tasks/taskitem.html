@@ -13,8 +13,8 @@
 		</div>
 	</div>
 	<div class="span10">
-		<a class="article-title" href="{% url tasks 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
-		<a href="{% url task task.id %}" class="article-title">
+		<a class="article-title" href="{% url 'tasks' 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
+		<a href="{% url 'task' task.id %}" class="article-title">
 			{{ task.name }}
 		</a><br/>
 		<div class="row-fluid">
@@ -27,7 +27,7 @@
 		<div class="row-fluid">
 			<div class="span8">
 				{% for tag in task.tags.all %}
-					<a href="{% url tasks 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
+					<a href="{% url 'tasks' 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
 				{% endfor %}
 			</div>
 			<div class="span4">

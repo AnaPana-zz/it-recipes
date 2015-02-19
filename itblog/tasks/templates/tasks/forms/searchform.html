@@ -21,7 +21,7 @@
 
 </script>
 {% load extra_tags %}
-<form action="{% url tasks 'search' 0 %}" method="GET">
+<form action="{% url 'tasks' 'search' 0 %}" method="GET">
 	<div class="input-append">
 		<input class="input-medium" id="id_search" name="q" type="text" value="{{ query }}" autocomplete="off"> 
 		<button type="button" class="btn" onclick="if ($('#id_search').val() != '') {this.form.submit()}">

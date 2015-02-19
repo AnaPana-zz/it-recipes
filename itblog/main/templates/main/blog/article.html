@@ -39,7 +39,7 @@ function remove_article(event, id) {
 				csrfmiddlewaretoken: getCookie('csrftoken')
 			},
 			function(data) {
-				window.location.href = "{% url blog 0 %}";
+				window.location.href = "{% url 'blog' 0 %}";
 			});
 	}
 }
@@ -53,13 +53,13 @@ function remove_article(event, id) {
 <div class="article-div">
 	<div class="row-fluid">
 		<div class="span9">
-			<a class="article-title" href="{% url main 'subjects' article.subject.name %}">{{ article.subject.name }} > </a>
+			<a class="article-title" href="{% url 'main' 'subjects' article.subject.name %}">{{ article.subject.name }} > </a>
 			<span class="article-title">{{ article.title }}</span>
 		</div>
 		<div class="span3">
 			{% if user.is_authenticated %}
 				<span id="is_in_favorites" class="pull-right favorite"  style="{% if not article|is_in_favorites:user %}display:none{% endif %}">
-					<a href="{% url dash 'favorites' article.subject.id %}">
+					<a href="{% url 'dash' 'favorites' article.subject.id %}">
 						In favorites
 					</a>
 					 | 
@@ -86,19 +86,19 @@ function remove_article(event, id) {
 	</p>
 	{% if article %}
 		{% for tag in article.mtags.all %}
-			<a href="{% url main 'tags' tag.name %}"><div class="label label-info">{{ tag.name }}</div></a>
+			<a href="{% url 'main' 'tags' tag.name %}"><div class="label label-info">{{ tag.name }}</div></a>
 		{% endfor %}
 	{% endif %}
 	<div class="articles-navigation">
 		{% if previous %}
 			<div style="float: left; text-align: left">
-				<a href="{% url blog previous.id %}"><< {{ previous.title }}</a>
+				<a href="{% url 'blog' previous.id %}"><< {{ previous.title }}</a>
 			</div>
 		{% endif %}
 		
 		{% if next %}
 			<div style="float: right; text-align: right">
-				<a href="{% url blog next.id %}">{{ next.title }} >></a>
+				<a href="{% url 'blog' next.id %}">{{ next.title }} >></a>
 			</div>
 		{% endif %}
 	</div>
@@ -111,7 +111,7 @@ function remove_article(event, id) {
 	<div class="span5">
 		{% if user.is_superuser or article.author == user %}
 			<div class="pull-right">
-				<a href="{% url editarticle article.id %}" class="btn btn-info">Edit article</a>
+				<a href="{% url 'editarticle' article.id %}" class="btn btn-info">Edit article</a>
 				<a href="#" class="btn btn-danger" onclick="remove_article(event, '{{ article.id }}')">Delete article</a>
 			</div>
 		{% endif %}

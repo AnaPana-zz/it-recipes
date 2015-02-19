@@ -5,14 +5,14 @@
 
 <div class="grey-box">
 	
-	<a href="{% url main 'recent' '0' %}">
+	<a href="{% url 'main' 'recent' '0' %}">
 		<h4>Recent articles</h4>
 	</a>
 	
 	<ul class="nav articles-list">
 		{% for article in recent_articles %}
 			<li>
-				<a href="{% url blog article.id %}" class="article-item" style="font-size: 12px;">
+				<a href="{% url 'blog' article.id %}" class="article-item" style="font-size: 12px;">
 					{{ article.title }}
 				</a>
 			</li>
@@ -36,7 +36,7 @@
 					<ul class="nav articles-list">
 					{% for article in item.articles %}
 						<li>
-							<a href="{% url blog article.id %}" class="article-item" style="font-size: 12px;">
+							<a href="{% url 'blog' article.id %}" class="article-item" style="font-size: 12px;">
 								{{ article.title }}
 							</a>
 						</li>
@@ -50,7 +50,7 @@
 
 	{% for tag in tags %}
 		{% if tag.amount %}
-			<a href="{% url main 'tags' tag.name %}" class="tag" style="font-size:
+			<a href="{% url 'main' 'tags' tag.name %}" class="tag" style="font-size:
 						{% if tag.amount <= 5 %}12px
 						{% elif tag.amount > 5 and tag.amount <= 10 %}14px
 						{% elif tag.amount > 10 and tag.amount <= 15 %}16px

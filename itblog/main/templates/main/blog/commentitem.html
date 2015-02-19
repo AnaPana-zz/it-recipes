@@ -19,7 +19,7 @@
 					{% if user.is_authenticated %}
 						<div class="wgt-buttons">
 							{% if user.is_superuser or user == comment.author or user == comment.article.author %}
-								<a class="btn btn-mini" href="{% url editcomment comment.id %}"><i class="icon-edit"></i> Edit</a>
+								<a class="btn btn-mini" href="{% url 'editcomment' comment.id %}"><i class="icon-edit"></i> Edit</a>
 								<a href="#" class="btn btn-mini" onclick="remove_item(event, {{ comment.id }}, 'comment')"><i class="icon-remove"></i> Remove</a>
 							{% endif %}
 						</div>
@@ -31,7 +31,7 @@
 				{% if can_answer == 'True' %}
 					<div class="wgt-footer">
 						<div class="wgt-buttons pull-right">
-							<a href="{% url commentdialog comment.id %}" class="btn btn-mini btn-success"> Answer</a>
+							<a href="{% url 'commentdialog' comment.id %}" class="btn btn-mini btn-success"> Answer</a>
 						</div>
 					</div>
 				{% endif %}
