@@ -1,6 +1,6 @@
 Deploying app:
 
-1. Create Python2.7 application on openshift.redhat.com
+1. Create Python2.7 application on openshift.redhat.com (try to add source code from github there)
 2. Add MySQL cartridge.
 3. Clone openshift repo to your local mashine (add public key on openshift beforehand).
 4. Fork this repo.
