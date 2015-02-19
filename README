@@ -9,11 +9,11 @@ Deploying app:
 7. Rename database as your openshift db name (you can see it on your app page) in itblog/settings.py
 8. Push changes to openshift.
 9. Connect to openshift via ssh.
-8. Syncdb on the server.
+10. Syncdb on the server.
 python manage.py syncdb
 Type data for superuser.
-9. Manually install pyCAPTCHA(https://github.com/reddit/reddit/issues/485)
-10. create table for it
+11. Manually install pyCAPTCHA(https://github.com/reddit/reddit/issues/485)
+12. create table for it
 python manage.py dbshell
 +------------+-------------+------+-----+---------+----------------+
 | Field      | Type        | Null | Key | Default | Extra          |
@@ -25,11 +25,11 @@ python manage.py dbshell
 | expiration | datetime    | NO   |     | NULL    |                |
 +------------+-------------+------+-----+---------+----------------+
 
-11. Move static to openshift folder:
+13. Move static to openshift folder:
 python manage.py collectstatic
-11. Add first article / TODO: fix this bug.
+14. Add first article / TODO: fix this bug.
 
-TODO: create action hooks for 7-11.
+TODO: create action hooks for 7-13.
 
 For local development:
 
