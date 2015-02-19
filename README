@@ -6,22 +6,18 @@ Deploying app:
 4. Fork this repo.
 5. Add this repo as second on your local machine (http://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes#Adding-Remote-Repositories)
 6. Make changes in wsgi.py file (http://www.it-recipes.com/articles/blog/204)
-7. Create itblog/credentials.py file with the following structure:
-
-ADMIN_MAIL = {
-              'address'  : 'admin@gmail.com',
-              'password' : 'pass',
-              'server'   : 'smtp.gmail.com',
-              'port'     : '2525',
-              }
-              
-8. For local development the following environment variables are needed:
+7. For local development the following environment variables are needed:
 
 ITBLOG_MYSQL_DB_NAME='itblog' && export ITBLOG_MYSQL_DB_NAME
 ITBLOG_MYSQL_DB_USERNAME='my-user' && export ITBLOG_MYSQL_DB_USERNAME
 ITBLOG_MYSQL_DB_PASSWORD='my-pass' && export ITBLOG_MYSQL_DB_PASSWORD
 ITBLOG_MYSQL_DB_HOST='' && export ITBLOG_MYSQL_DB_HOST
 ITBLOG_MYSQL_DB_PORT='' && export ITBLOG_MYSQL_DB_PORT
+ADMIN_MAIL='admin@it-recipes.com' && export ADMIN_MAIL
+ADMIN_PASS='MyNewItRecipes' && export ADMIN_PASS
+SMTP_SERVER='smtp.mail.ru' && export SMTP_SERVER
+SMTP_PORT='2525' && export SMTP_PORT
+
 ITBLOG_APP_HOST='192.168.56.110' && export ITBLOG_APP_HOST
 ITBLOG_APP_PORT='8080' && export ITBLOG_APP_PORT
 
