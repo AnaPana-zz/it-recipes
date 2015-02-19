@@ -8,7 +8,7 @@ Deploying app:
 6. Make changes in wsgi.py file (http://www.it-recipes.com/articles/blog/204)
 7. Rename database as your openshift db name in itblog/settings.py
 8. Syncdb on the server. Manually install pyCAPTCHA(https://github.com/reddit/reddit/issues/485) and create table for it.
-
+9. python manage.py collectstatic on the server
 
 For local development:
 
