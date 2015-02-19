@@ -9,30 +9,12 @@ from .models import Subject, UsefulLink, Article
 from .forms import UsefulLinkForm
 
 
-class TestResponses(TestCase):
-
-    def test_home_url(self):
-        response = self.client.get('/', follow = True)
-        self.assertEqual(response.redirect_chain, 
-                         [('http://testserver/articles/recent/0', 301)],)
- 
-    def test_unexisted_article_url(self):
-        response = self.client.get('/articles/blog/999999', follow = True)
-        self.assertEqual(response.redirect_chain, 
-                         [('http://testserver/articles/recent/0', 302)],)
-
-#     def test_existed_article_url(self):
-#         user = User.objects.create_superuser('bbb', 'aaa@mail.ru', '123')
-#         subject = Subject.objects.create(name='python')
-#         article = Article.objects.create(title='My First Article', body='Body',
-#                                          author=user, subject=subject)
-#         response = self.client.get('/articles/blog/1')
-#         self.assertContains(response, 'My First Article')
-#         self.assertEqual(response.status_code, 200)
+class TestStaticResponses(TestCase):
 
     def test_subjects_url(self):
-        response = self.client.get('/links')
-        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/subject', follow=True)
+        self.assertEqual(response.redirect_chain,
+                         [('http://testserver/accounts/login/?next=/subject', 302)])
 
     def test_links_url(self):
         response = self.client.get('/links')
@@ -82,6 +64,70 @@ class TestStaticFunctions(TestCase):
         a.order_by.return_value = [1,2,3,4,5]
         result = get_recent_articles()
         self.assertEqual(result, [1,2,3])
+
+
+class TestBlogUserLoggedIn(TestCase):
+    
+    def setUp(self):
+        self.user = User.objects.create_superuser('bbb', 'aaa@mail.ru', '123')
+        self.subject = Subject.objects.create(name='python')
+        self.article = Article.objects.create(title='My First Article', body='Body',
+                                         author=self.user, subject=self.subject, is_published=True)
+        self.client.post('/login', {'username': self.user.username,
+                                               'password' : '123'})
+
+    def add_article_to_favourite(self):
+        response = self.client.get('/articles/blog/%s' % self.article.id,
+                                   {'add_request' : True, 'type' : 'favourite'})
+        f, created = Favourite.objects.get_or_create(article=self.article,
+                                                     owner=self.user)
+        self.assertEqual(created, True)
+        self.assertEqual(response.status_code, 200)
+        
+    def tearDown(self):
+        self.article.delete()
+        self.user.delete()
+        self.subject.delete()
+        self.client.get('/logout')
+
+
+class TestBlogUserIsNotLoggedIn(TestCase):
+    
+    def setUp(self):
+        self.user = User.objects.create_superuser('bbb', 'aaa@mail.ru', '123')
+        self.subject = Subject.objects.create(name='python')
+        self.article = Article.objects.create(title='My First Article', body='Body',
+                                         author=self.user, subject=self.subject, is_published=True)
+    
+    def test_home_url(self):
+        response = self.client.get('/', follow = True)
+        self.assertEqual(response.redirect_chain, 
+                         [('http://testserver/articles/recent/0', 301)],)
+ 
+    def test_unexisted_article_url(self):
+        response = self.client.get('/articles/blog/999999', follow = True)
+        self.assertEqual(response.redirect_chain, 
+                         [('http://testserver/articles/recent/0', 302)],)
+
+    def test_existed_article(self):
+        response = self.client.get('/articles/blog/%s' % self.article.id)
+        self.assertNotContains(response, 'Add to favorites')
+        self.assertNotContains(response, '<a href="/article/edit/%s" class="btn btn-info">Edit article</a>' % self.article.id)
+        self.assertNotContains(response, '<a href="#" class="btn btn-danger" onclick="remove_article(event, \'%s\')">Delete article</a>' % self.article.id)
+        self.assertContains(response, 'My First Article')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_refresh_captcha(self):
+        response = self.client.get('/articles/blog/%s' % self.article.id,
+                                   {'refresh_captcha' : True},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response['Content-Type'], 'application/json')
+        self.assertEqual(response.status_code, 200)
+
+    def tearDown(self):
+        self.article.delete()
+        self.user.delete()
+        self.subject.delete()
 
 
 class TestUsefulLinks(TestCase):
@@ -140,6 +186,9 @@ class TestUsefulLinks(TestCase):
                                                'password' : '123'})
         response = self.client.post('/links', {})
         self.assertContains(response, 'This field is required.')
+    
+    def tearDown(self):
+        self.client.get('/logout')
 
 # class SeleniumTestLoginForm(LiveServerTestCase):
 #     fixtures = ['user-data.json']

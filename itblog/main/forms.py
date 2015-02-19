@@ -67,6 +67,7 @@ class ImageForm(forms.ModelForm):
     
     class Meta:
         model = ArticleImage
+        fields = ('article', 'image', )
 
     def __init__(self, *args, **kwargs):
         super(ImageForm, self).__init__(*args, **kwargs)
@@ -77,6 +78,7 @@ class SubjectForm(forms.ModelForm):
     
     class Meta:
         model = Subject
+        fields = ('name', 'parent_subject', )
     
     def __init__(self, *args, **kwargs):
         super(SubjectForm, self).__init__(*args, **kwargs)
@@ -88,6 +90,7 @@ class UsefulLinkForm(forms.ModelForm):
     
     class Meta:
         model = UsefulLink
+        fields = ('url', 'description', 'subject', )
 
     def __init__(self, *args, **kwargs):
         super(UsefulLinkForm, self).__init__(*args, **kwargs)
@@ -103,6 +106,8 @@ class CommentForm(forms.ModelForm):
     
     class Meta:
         model = Comment
+        fields = ('name', 'author', 'body',
+                  'article', 'parent_comment')
 
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
@@ -137,7 +142,7 @@ class PersonalForm(forms.Form):
         return cleaned_data
         
         
-class UserForm(forms.ModelForm):
-    
-    class Meta:
-        model = User
+# class UserForm(forms.ModelForm):
+#      
+#     class Meta:
+#         model = User

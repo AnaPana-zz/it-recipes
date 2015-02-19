@@ -1,6 +1,6 @@
 from main.models import *
 from tasks.models import Solution
-from main.forms import PersonalForm, UserForm
+from main.forms import PersonalForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
