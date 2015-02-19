@@ -6,6 +6,8 @@ Deploying app:
 4. Fork this repo.
 5. Add this repo as second on your local machine (http://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes#Adding-Remote-Repositories)
 6. Make changes in wsgi.py file (http://www.it-recipes.com/articles/blog/204)
+7. Rename database as your openshift db name in itblog/settings.py
+8. Syncdb on the server. Manually install pyCAPTCHA(https://github.com/reddit/reddit/issues/485) and create table for it.
 
 
 For local development:
