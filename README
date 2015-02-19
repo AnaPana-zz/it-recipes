@@ -1,0 +1,29 @@
+Deploying app:
+
+1. Create Python2.7 application on openshift.redhat.com
+2. Add MySQL cartridge.
+3. Clone openshift repo to your local mashine (add public key on openshift beforehand).
+4. Fork this repo.
+5. Add this repo as second on your local machine (http://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes#Adding-Remote-Repositories)
+6. Make changes in wsgi.py file (http://www.it-recipes.com/articles/blog/204)
+7. Create itblog/credentials.py file with the following structure:
+
+ADMIN_MAIL = {
+              'address'  : 'admin@gmail.com',
+              'password' : 'pass',
+              'server'   : 'smtp.gmail.com',
+              'port'     : '2525',
+              }
+              
+8. For local development the following environment variables are needed:
+
+ITBLOG_MYSQL_DB_NAME='itblog' && export ITBLOG_MYSQL_DB_NAME
+ITBLOG_MYSQL_DB_USERNAME='my-user' && export ITBLOG_MYSQL_DB_USERNAME
+ITBLOG_MYSQL_DB_PASSWORD='my-pass' && export ITBLOG_MYSQL_DB_PASSWORD
+ITBLOG_MYSQL_DB_HOST='' && export ITBLOG_MYSQL_DB_HOST
+ITBLOG_MYSQL_DB_PORT='' && export ITBLOG_MYSQL_DB_PORT
+ITBLOG_APP_HOST='192.168.56.110' && export ITBLOG_APP_HOST
+ITBLOG_APP_PORT='8080' && export ITBLOG_APP_PORT
+
+9. You'll also need to install MySQL and create database and user with credentials that are mentioned.
+
