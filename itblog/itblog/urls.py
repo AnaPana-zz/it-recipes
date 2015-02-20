@@ -44,5 +44,3 @@ urlpatterns += patterns('',
     (r'^dashboard/', include('dashboard.urls')),
     (r'^tasks/', include('tasks.urls')),
 )
-
-handler404 = 'main.views.page_not_found'

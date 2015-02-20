@@ -1,5 +1,5 @@
 #coding: utf-8 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -221,9 +221,12 @@ def tags_results(request, context_dict, **kwargs):
     tag_name = str(kwargs.get('item_name'))
     p = int(kwargs.get('page'))
     delta = int(kwargs.get('delta'))
-    articles = Tag.objects.get(name=tag_name).article_set\
-                                                .filter(is_published=True)\
-                                                .select_related('subject')
+    try:
+        articles = Tag.objects.get(name=tag_name).article_set\
+                                                    .filter(is_published=True)\
+                                                    .select_related('subject')
+    except Tag.DoesNotExist:
+        articles = []
                                                 
     context_dict['articles'] = articles[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(articles), p, delta)
@@ -400,10 +403,6 @@ def links(request):
 
 def about(request):
     return render(request, 'main/base/about.html')
-
-
-def page_not_found(request):
-    return render(request, '404.html')
 
 
 def get_recent_articles():
