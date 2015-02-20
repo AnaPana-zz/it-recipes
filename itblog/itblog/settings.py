@@ -15,6 +15,12 @@ else:
     DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+if ON_OPENSHIFT:
+    ALLOWED_HOSTS = [
+        '.rhcloud.com'  # Allow domain and subdomains
+    ]
+
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
