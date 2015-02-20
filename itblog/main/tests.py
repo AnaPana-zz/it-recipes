@@ -1,20 +1,17 @@
 from django.test import TestCase, LiveServerTestCase, Client
 from django.contrib.auth.models import User
 
-from mock import MagicMock, patch
+from mock import patch, Mock
 from selenium.webdriver.firefox.webdriver import WebDriver
 
 from .views import get_comment_dialog, get_comments_tree, get_recent_articles
 from .models import Subject, UsefulLink, Article
-from .forms import UsefulLinkForm
+from .forms import UsefulLinkForm, SubjectForm
+from .utils import get_neighbors, send_mail, get_pagination_info, get_query, normalize_query
 
+import smtplib
 
 class TestStaticResponses(TestCase):
-
-    def test_subjects_url(self):
-        response = self.client.get('/subject', follow=True)
-        self.assertEqual(response.redirect_chain,
-                         [('http://testserver/accounts/login/?next=/subject', 302)])
 
     def test_links_url(self):
         response = self.client.get('/links')
@@ -66,6 +63,66 @@ class TestStaticFunctions(TestCase):
         self.assertEqual(result, [1,2,3])
 
 
+class TestSubjects(TestCase):
+    """Class for testing base "subject" page elements,
+    subject's actions in view and subject's form.
+    """
+    
+    def test_subjects_url(self):
+        response = self.client.get('/subject', follow=True)
+        self.assertEqual(response.redirect_chain,
+                         [('http://testserver/accounts/login/?next=/subject', 302)])
+    
+    def test_form_valid_data(self):
+        form = SubjectForm({
+            'name': 'my subject',
+            'parent_subject': None,
+        })
+        self.assertTrue(form.is_valid())
+        subject = form.save()
+        self.assertEqual(subject.name, 'my subject')
+        self.assertEqual(subject.parent_subject, None)
+        
+        form = SubjectForm({
+            'name': 'child subject',
+            'parent_subject': subject.id,
+        })
+        self.assertTrue(form.is_valid())
+        child_subject = form.save()
+        self.assertEqual(child_subject.name, 'child subject')
+        self.assertEqual(child_subject.parent_subject, subject)
+
+    def test_blank_data(self):
+        form = SubjectForm({})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            'name': [u'This field is required.'],
+        })
+    
+    def test_subject_actions(self):
+        self.user = User.objects.create_superuser('bbb', 'aaa@mail.ru', '123')
+        self.client.post('/login', {'username': self.user.username,
+                                    'password' : '123'})
+        self.client.post('/subject', {'name' : 'yours subject'})
+        subject = Subject.objects.get(name='yours subject')
+        self.assertEqual(subject.name, 'yours subject')
+        
+        response = self.client.post('/subject', {'edit_request' : True,
+                                                 'item_id' : subject.id})
+        self.assertTemplateUsed(response, 'main/forms/rowform.html')
+        
+        self.client.post('/subject', {'edit_submit' : True,
+                                      'item_id' : subject.id,
+                                      'name' : 'my new subject'})
+        subject = Subject.objects.get(id=subject.id)
+        self.assertEqual(subject.name, 'my new subject')
+        
+        response = self.client.post('/subject', {'delete_request' : True,
+                                                 'item_id' : subject.id})
+        with self.assertRaises(Subject.DoesNotExist) as e:
+            Subject.objects.get(id=subject.id)
+        
+
 class TestBlogUserLoggedIn(TestCase):
     
     def setUp(self):
@@ -103,6 +160,11 @@ class TestBlogUserIsNotLoggedIn(TestCase):
         response = self.client.get('/', follow = True)
         self.assertEqual(response.redirect_chain, 
                          [('http://testserver/articles/recent/0', 301)],)
+ 
+    def test_blog_template(self):
+        response = self.client.get('/articles/blog/%s' % self.article.id)
+        self.assertTemplateUsed(response, 'main/blog/blog.html')
+        self.assertTemplateUsed(response, 'main/blog/article.html')
  
     def test_unexisted_article_url(self):
         response = self.client.get('/articles/blog/999999', follow = True)
@@ -189,6 +251,60 @@ class TestUsefulLinks(TestCase):
     
     def tearDown(self):
         self.client.get('/logout')
+
+
+class TestUtils(TestCase):
+    """Class for testing main/utils.py module
+    """
+    
+    def test_get_neighbors(self):
+        self.assertEqual((1, 3), get_neighbors(2, [1,2,3]))
+        self.assertEqual((None, 2), get_neighbors(1, [1,2,3]))
+        self.assertEqual((2, None), get_neighbors(3, [1,2,3]))
+    
+    def test_send_mail(self):
+        with patch("smtplib.SMTP") as mock_smtp:
+            send_mail('bla@boo.com', 'this is subject', 'this is body')
+        from credentials import ADMIN_MAIL
+        mock_smtp.assert_called_once_with('%s:%s' % (ADMIN_MAIL['server'],
+                                                     ADMIN_MAIL['port']))
+    
+    def test_get_pagination_info(self):
+        self.assertEqual({'range_step' : 10,
+                          'page_range' : [1, 2],
+                          'p' : 1,
+                          'delta' : 10,
+                          'delta_range' : [10, 20, 30],
+                          'lst_len' : 20,
+                          'all' : False,
+                         },
+                         get_pagination_info(20, 1, 10))
+        self.assertEqual({'range_step' : 10,
+                          'page_range' : [1],
+                          'p' : 1,
+                          'delta' : 10,
+                          'delta_range' : [10, 20, 30],
+                          'lst_len' : 10,
+                          'all' : True,
+                         },
+                         get_pagination_info(10, 1, 10))
+        self.assertEqual({'range_step' : 10,
+                          'page_range' : [1,2,3,4,5,6],
+                          'p' : 4,
+                          'delta' : 10,
+                          'delta_range' : [10, 20, 30],
+                          'lst_len' : 55,
+                          'all' : False,
+                         },
+                         get_pagination_info(55, 4, 10))
+    
+    @patch('main.utils.normalize_query')
+    def test_get_query(self, mock_normalize_query):
+        mock_normalize_query.return_value=['some', 'random', 'words', 'with quotes']
+        result = get_query('  some random  words "with   quotes  "', ('title', 'body', 'author.name'))
+#         TODO!!!
+#         self.assertEqual(result, 1)
+        
 
 # class SeleniumTestLoginForm(LiveServerTestCase):
 #     fixtures = ['user-data.json']
