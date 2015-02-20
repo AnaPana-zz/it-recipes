@@ -1,5 +1,6 @@
 from django.test import TestCase, LiveServerTestCase, Client
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from mock import patch, Mock
 from selenium.webdriver.firefox.webdriver import WebDriver
@@ -300,10 +301,18 @@ class TestUtils(TestCase):
     
     @patch('main.utils.normalize_query')
     def test_get_query(self, mock_normalize_query):
-        mock_normalize_query.return_value=['some', 'random', 'words', 'with quotes']
-        result = get_query('  some random  words "with   quotes  "', ('title', 'body', 'author.name'))
-#         TODO!!!
-#         self.assertEqual(result, 1)
+        mock_normalize_query.return_value=['some', 'words', 'with quotes']
+        result = get_query('  some  words "with   quotes  "', ('title', 'body'))
+        expected = (Q(**{'title__icontains' : 'some'}) | Q(**{'body__icontains' : 'some'})) & \
+                   (Q(**{'title__icontains' : 'words'}) | Q(**{'body__icontains' : 'words'})) & \
+                   (Q(**{'title__icontains' : 'with quotes'}) | Q(**{'body__icontains' : 'with quotes'}))
+        for i, j in zip(result.__dict__['children'], expected.__dict__['children']):
+            self.assertEqual(i.__dict__, j.__dict__)
+    
+    def test_normalize_query(self):
+        self.assertEqual(normalize_query('  some random  words "with   quotes  " and   spaces'),
+                         ['some', 'random', 'words', 'with quotes', 'and', 'spaces'])
+        
         
 
 # class SeleniumTestLoginForm(LiveServerTestCase):
@@ -340,24 +349,3 @@ class TestUtils(TestCase):
 #         time.sleep(2)
 #         print '\ntest_invalid_login'
 #         self.assertTrue(self.selenium.find_element_by_xpath("//li[contains(text(), 'Please enter a correct username and password.')]"))
-# 
-# SITE_URL = '192.168.56.98:8080'
-# 
-# from django.utils import unittest
-# from main.models import Subject, Article
-# from django.contrib.auth.models import User
-# 
-# class ArticleTestCase(unittest.TestCase):
-#     def setUp(self):
-#         print "Testing Subject, User, Article"
-#         self.user = User.objects.create(username="TestUser",
-#                                         email="bla@mail.com",
-#                                         password="pwd")
-#         self.subj = Subject.objects.create(name="TestSubj")
-#         self.art = Article.objects.create(title="TestArticle",
-#                                           body="TestBody",
-#                                           subject=self.subj,
-#                                           author=self.user)
-# 
-#     def testArticle(self):
-#         self.assertEqual(self.art.title, "TestArticle")
