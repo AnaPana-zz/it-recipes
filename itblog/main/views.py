@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDict
 from django import forms
 
-from main.forms import *
-from main.models import *
+from .forms import *
+from .models import *
 from utils import get_query, get_pagination_info, \
                   send_mail, refresh_captcha, get_neighbors
 

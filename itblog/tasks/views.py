@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from tasks.forms import *
-from tasks.models import *
+from .forms import *
+from .models import *
 from main.utils import get_query, get_pagination_info, refresh_captcha, send_mail
 
 
