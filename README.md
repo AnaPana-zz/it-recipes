@@ -12,7 +12,7 @@ Deploying blog on [OpenShift](https://www.openshift.com/ "OpenShift")
 8. There are two action hooks:
  * ```.openshift/action_hooks/pre_start```
  * ```.openshift/action_hooks/post_start_mysql-5.5```<br>
-The second one creates missing table and superuser. Remember superuser credentials and **remove** this hook after first launch. You'll need to change superuser credentials in blog's dashboard.
+The second one syncs db and creates superuser. Remember superuser credentials and **remove** this line after first launch. You'll need to change superuser credentials in blog's dashboard.
 9. Push your code to openshift:
 ```git push openshift master --force```
 
