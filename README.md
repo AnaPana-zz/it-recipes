@@ -30,7 +30,9 @@ For local development
 And source it:<br/>
 ```source ~/.profile```
 
-2. Create python virtual environment (http://docs.python-guide.org/en/latest/dev/virtualenvs) and install requirements:<br>
-```pip install -r requirements/local.txt```
+2. Create python virtual environment (http://docs.python-guide.org/en/latest/dev/virtualenvs) and install requirements:<br/>
+```pip install -r requirements.txt```<br/>
+or<br/>
+```pip install -r requirements/local.txt```<br/>
 
-Use local requirements for development as it contains test packages too.
+```requirements.txt``` file is used in production. For your extra packages you can use ```requirements/local.txt```.
