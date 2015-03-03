@@ -33,4 +33,4 @@ And source it:<br/>
 2. Create python virtual environment (http://docs.python-guide.org/en/latest/dev/virtualenvs) and install requirements:<br>
 ```pip install -r requirements/local.txt```
 
-Use local requirements as it contains test packages to.
+Use local requirements for development as it contains test packages too.
