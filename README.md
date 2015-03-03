@@ -20,14 +20,17 @@ The second one syncs db and creates superuser. Remember superuser credentials an
 For local development
 =====================
 
-1. Add the following environment variables to ~/.profile and source it.<br>
-```ADMIN_MAIL='admin@gmail.com' && export ADMIN_MAIL
-ADMIN_PASS='pass' && export ADMIN_PASS
-SMTP_SERVER='smtp.gmail.com' && export SMTP_SERVER
-SMTP_PORT='2525' && export SMTP_PORT
-ITBLOG_APP_HOST='192.168.56.110' && export ITBLOG_APP_HOST
-ITBLOG_APP_PORT='8080' && export ITBLOG_APP_PORT```
+1. Add the following environment variables to ~/.profile:<br/>
+```export ADMIN_MAIL='admin@gmail.com' # put your email address here```<br/>
+```export ADMIN_PASS='pass' # put your email pass here```<br/>
+```export SMTP_SERVER='smtp.gmail.com' # your smtp here```<br/>
+```export SMTP_PORT='2525' # your smtp port```<br/>
+```export ITBLOG_APP_HOST='127.0.0.1' # is using in itblog/runserver.sh```<br/>
+```export ITBLOG_APP_PORT='8080' # is using in itblog/runserver.sh```<br/>
+And source it:<br/>
+```source ~/.profile```
 
 2. Create python virtual environment (http://docs.python-guide.org/en/latest/dev/virtualenvs) and install requirements:<br>
-```pip install -r requirements.txt```
+```pip install -r requirements/local.txt```
 
+Use local requirements as it contains test packages to.
