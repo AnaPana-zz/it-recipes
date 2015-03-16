@@ -17,7 +17,8 @@ TEMPLATE_DEBUG = DEBUG
 
 if ON_OPENSHIFT:
     ALLOWED_HOSTS = [
-        '.rhcloud.com'  # Allow domain and subdomains
+        '.rhcloud.com',  # Allow domain and subdomains
+	'.it-recipes.com'
     ]
 
 
