@@ -32,7 +32,7 @@
 	<div class="control-group">
     	<div class="controls">
     		<input class="btn btn-success" type="submit" value="Save">
-			<a href="{% if task_id %}{% url task task_id %}{% else %}{% url tasks 'all' 0 %}{% endif %}" class="btn">Cancel</a>
+			<a href="{% if task_id %}{% url 'task' task_id %}{% else %}{% url 'tasks' 'all' 0 %}{% endif %}" class="btn">Cancel</a>
 		</div>
 	</div>
 </form>

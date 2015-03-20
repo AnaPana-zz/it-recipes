@@ -12,17 +12,17 @@ function publish_article(id, url){
 <div class="row-fluid">
 	<div class="span9">
 			<strong>{{ article.subject.name }} > </strong>
-		<!-- <a href="{% url editarticle article.id %}" class="article-items-title"> -->
+		<!-- <a href="{% url 'editarticle' article.id %}" class="article-items-title"> -->
 			{{ article.title }}
 		<!-- </a> -->
 	</div>
 	<div class="span3">
 		<div class="pull-right">
 			{% if article.author == user %}
-				<a class="btn btn-mini" href="{% url editarticle article.id %}">
+				<a class="btn btn-mini" href="{% url 'editarticle' article.id %}">
 					<i class="icon-edit"></i> Edit
 				</a>
-				<a href="#" class="btn btn-mini" onclick="publish_article('{{ article.id }}', '{% url blog article.id %}')">
+				<a href="#" class="btn btn-mini" onclick="publish_article('{{ article.id }}', '{% url 'blog' article.id %}')">
 					<i class="icon-ok"></i> Publish
 				</a>
 			{% endif %}

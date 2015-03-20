@@ -54,7 +54,7 @@ def get_query(query_string, search_fields):
 
 
 def get_pagination_info(lst_len, p=1, delta=10):
-    range_step = 10
+    range_step = 10 # range for "select" elemnt on the page for show results per page
     delta_range = range(range_step, range_step*4, range_step)
     
     if delta and lst_len:
@@ -90,7 +90,7 @@ def send_mail(recipients_list, subject, body):
     password = ADMIN_MAIL['password']
 
     server = smtplib.SMTP('%s:%s' % (ADMIN_MAIL['server'],
-                                     ADMIN_MAIL['port']))  
+                                     ADMIN_MAIL['port']))
     server.starttls()  
     server.login(username,password)
     server.sendmail(admin_mail, recipients_list, msg.as_string())

@@ -68,6 +68,7 @@ class TaskSubjectForm(forms.ModelForm):
     
     class Meta:
         model = TaskSubject
+        fields = ('name', 'parent_subject')
     
     def __init__(self, *args, **kwargs):
         super(TaskSubjectForm, self).__init__(*args, **kwargs)
@@ -82,6 +83,8 @@ class SolutionForm(forms.ModelForm):
     
     class Meta:
         model = Solution
+        fields = ('author_name', 'author',
+                  'body', 'task', 'votes')
 
     def __init__(self, *args, **kwargs):
         super(SolutionForm, self).__init__(*args, **kwargs)
@@ -100,6 +103,8 @@ class SolutionCommentForm(forms.ModelForm):
     
     class Meta:
         model = SolutionComment
+        fields = ('author_name', 'author',
+                  'body', 'solution')
 
     def __init__(self, *args, **kwargs):
         super(SolutionCommentForm, self).__init__(*args, **kwargs)

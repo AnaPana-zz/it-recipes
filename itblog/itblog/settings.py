@@ -15,6 +15,13 @@ else:
     DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+if ON_OPENSHIFT:
+    ALLOWED_HOSTS = [
+        '.rhcloud.com',  # Allow domain and subdomains
+	'.it-recipes.com'
+    ]
+
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -161,6 +168,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

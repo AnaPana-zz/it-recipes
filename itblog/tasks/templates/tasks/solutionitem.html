@@ -15,7 +15,7 @@
 					csrfmiddlewaretoken: getCookie('csrftoken')
 				},
 				function(data) {
-					window.location.href = "{% url task task.id %}";
+					window.location.href = "{% url 'task' task.id %}";
 				});
 		}
 	}
@@ -50,7 +50,7 @@
 			</span><br/>
 			<div class="pull-right">
 				{% if solution.author == user or user.is_superuser %}
-					<a href="{% url editsolution solution.id %}" class="btn btn-mini">Edit solution</a>
+					<a href="{% url 'editsolution' solution.id %}" class="btn btn-mini">Edit solution</a>
 					<a href="#" class="btn btn-mini btn-danger" onclick="remove_solution(event, '{{ solution.id }}')">Delete solution</a>
 				{% endif %}
 			</div>
@@ -67,7 +67,7 @@
 					{% endif %}</span> <span class="muted">{{ c.date|date:"M d'y \a\t H:i" }}</span>
 					
 					{% if c.author == user or user.is_superuser %}
-						<a href="{% url editsolutioncomment c.id %}"> Edit </a> | 
+						<a href="{% url 'editsolutioncomment' c.id %}"> Edit </a> | 
 					{% endif %}
 					{% if c.author == user or user.is_superuser or c.solution.author == user %}
 						<a href="#" onclick="remove_item(event, {{ c.id }}, 'solution comment')"> Delete </a>
@@ -75,7 +75,7 @@
 				</div>
 			{% endfor %}
 			<div style="margin-top: 20px">
-				<a href="{% url addsolutioncomment solution.id %}" class="btn btn-mini">Add comment</a>
+				<a href="{% url 'addsolutioncomment' solution.id %}" class="btn btn-mini">Add comment</a>
 			</div>
 		</div>
 	</div>

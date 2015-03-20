@@ -21,7 +21,7 @@
 	<div class="span3">
 		{% if count %}
 			<div class="subjects-list">
-				<h5><a href="{% url dash page_type 0 %}" {% if subject_id == 0 %}class="bold"{% endif %}>All ({{ count }})</a></h5>
+				<h5><a href="{% url 'dash' page_type 0 %}" {% if subject_id == 0 %}class="bold"{% endif %}>All ({{ count }})</a></h5>
 			</div>
 		{% endif %}
 		{% block subject_tree %}
@@ -31,7 +31,7 @@
 					{% for item in subject.list %}
 						{% if forloop.first %}
 							<h5>
-								<a href="{% url dash page_type item.subject.id %}" {% if subject_id == item.subject.id %}class="bold"{% endif %}>
+								<a href="{% url 'dash' page_type item.subject.id %}" {% if subject_id == item.subject.id %}class="bold"{% endif %}>
 								{{ item.parent_subject }} > {{ subject.grouper }} ({{ subject.list|length }})
 								</a>
 							</h5>

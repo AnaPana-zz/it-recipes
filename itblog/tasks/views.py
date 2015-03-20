@@ -1,12 +1,11 @@
 #coding: utf-8 
-from django.views.generic.simple import direct_to_template
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from tasks.forms import *
-from tasks.models import *
+from .forms import *
+from .models import *
 from main.utils import get_query, get_pagination_info, refresh_captcha, send_mail
 
 
@@ -30,7 +29,7 @@ def all_results(request, context_dict, **kwargs):
     tasks = Task.objects.all()
     context_dict['tasks'] = tasks[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(tasks), p, delta)
-    return direct_to_template(request, 'tasks/tasks.html', context_dict)
+    return render(request, 'tasks/tasks.html', context_dict)
 
 
 def tags_results(request, context_dict, **kwargs):
@@ -41,7 +40,7 @@ def tags_results(request, context_dict, **kwargs):
                                                 
     context_dict['tasks'] = tasks[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(tasks), p, delta)
-    return direct_to_template(request, 'tasks/tasks.html', context_dict)
+    return render(request, 'tasks/tasks.html', context_dict)
 
 
 def subjects_results(request, context_dict, **kwargs):
@@ -52,7 +51,7 @@ def subjects_results(request, context_dict, **kwargs):
                                                     .select_related()
     context_dict['tasks'] = tasks[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(tasks), p, delta)
-    return direct_to_template(request, 'tasks/tasks.html', context_dict)
+    return render(request, 'tasks/tasks.html', context_dict)
 
 
 def search_results(request, context_dict, **kwargs):
@@ -71,7 +70,7 @@ def search_results(request, context_dict, **kwargs):
     context_dict['tasks'] = tasks[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(tasks), p, delta)
     
-    return direct_to_template(request, 'tasks/tasks.html', context_dict)
+    return render(request, 'tasks/tasks.html', context_dict)
 
 
 def task(request, task_id):
@@ -148,7 +147,7 @@ def task(request, task_id):
                           })
     context_dict['solutions'] = solutions
     
-    return direct_to_template(request, 'tasks/task.html', context_dict)
+    return render(request, 'tasks/task.html', context_dict)
 
 
 def add_solution_comment(request, solution_id):
@@ -183,7 +182,7 @@ def add_solution_comment(request, solution_id):
             send_mail(solution.author.email, message_subject, message_body)
             return redirect('task', task.id)
     
-    return direct_to_template(request, 'tasks/solutioncomment.html', {'form' : form,
+    return render(request, 'tasks/solutioncomment.html', {'form' : form,
                                                                       'task_id' : task.id,
                                                                       })
 
@@ -220,7 +219,7 @@ def edit_solution_comment(request, comment_id):
                 send_mail(comment.solution.author.email, message_subject, message_body)
                 return redirect('task', task_id)
     
-    return direct_to_template(request, 'tasks/solutioncomment.html', {'form' : form,
+    return render(request, 'tasks/solutioncomment.html', {'form' : form,
                                                                       'task_id' : task_id,
                                                                       })
 
@@ -262,7 +261,7 @@ def subjects(request):
             subject = TaskSubject.objects.get(pk=int(request.POST['item_id']))
             form = TaskSubjectForm(initial={'author': request.user},
                                    instance=subject)
-            return direct_to_template(request,
+            return render(request,
                                       'main/forms/rowform.html',
                                       {
                                        'form' : form ,
@@ -277,7 +276,7 @@ def subjects(request):
                 form.save()
                 return HttpResponse("")
             else:
-                return direct_to_template(request,
+                return render(request,
                                           'main/forms/rowform.html',
                                           {
                                            'form' : form ,
@@ -292,7 +291,7 @@ def subjects(request):
     # empty form
     else:
         form = TaskSubjectForm(initial={'author': request.user})
-    return direct_to_template(request, 'main/base/subjects.html',
+    return render(request, 'main/base/subjects.html',
                               {
                                'page_title' : 'Tasks subjects',
                                'result' : result,
@@ -313,7 +312,7 @@ def add_task(request):
     else:
         form = TaskForm(initial={'author' : request.user.id})
     tags = ",".join(list(set(["\'%s\'" % t.name for t in TaskTag.objects.all()])))
-    return direct_to_template(request, 'tasks/addtask.html', {'tags' : tags,
+    return render(request, 'tasks/addtask.html', {'tags' : tags,
                                                               'form' : form})
 
 
@@ -335,7 +334,7 @@ def edit_task(request, task_id):
                         'mtags' : ','.join([t.name for t in task.tags.all()])
                         })
     tags = ",".join(list(set(["\'%s\'" % t.name for t in TaskTag.objects.all()])))
-    return direct_to_template(request, 'tasks/addtask.html',
+    return render(request, 'tasks/addtask.html',
                                                         {'form' : form,
                                                          'tags' : tags,
                                                          'task_id' : task.id})
@@ -356,6 +355,6 @@ def edit_solution(request, solution_id):
     else:
         form = SolutionForm(instance=solution)
     form.fields['author_name'].widget = forms.HiddenInput()
-    return direct_to_template(request, 'tasks/solutioncomment.html',
+    return render(request, 'tasks/solutioncomment.html',
                                                         {'form' : form,
                                                          'task_id' : solution.task.id})

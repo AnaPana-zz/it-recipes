@@ -4,23 +4,23 @@
 			<div class="navbar navbar-default" role="navigation">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
-					<a class="brand" href="{% url home %}"> <img alt="" style="height: 50px;" src="{{ STATIC_URL }}/img/logo.png"> </a>
+					<a class="brand" href="{% url 'home' %}"> <img alt="" style="height: 50px;" src="{{ STATIC_URL }}/img/logo.png"> </a>
 				</div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="nav-collapse collapse">
 
 					<ul class="nav navbar-right" style="font-family: Geneva, Arial, Helvetica, sans-serif;">
 						<li>
-							<a href="{% url blog 0 %}">Blog</a>
+							<a href="{% url 'blog' 0 %}">Blog</a>
 						</li>
 						<li>
-							<a href="{% url tasks 'all' 0 %}">Tasks</a>
+							<a href="{% url 'tasks' 'all' 0 %}">Tasks</a>
 						</li>
 						<li>
-							<a href="{% url links %}">Useful links</a>
+							<a href="{% url 'links' %}">Useful links</a>
 						</li>
 						<li>
-							<a href="{% url about %}">About us</a>
+							<a href="{% url 'about' %}">About us</a>
 						</li>
 						{% if user.is_authenticated %}
 							<li>
@@ -28,37 +28,37 @@
 									<a id="user_button" class="btn dropdown-toggle" data-toggle="dropdown" href="#">{{ user }}<span class="caret"></span> </a>
 									<ul class="dropdown-menu">
 										<li>
-											<a href="{% url dash 'articles' 0 %}">Dashboard</a>
+											<a href="{% url 'dash' 'articles' 0 %}">Dashboard</a>
 										</li>
 										<li>
 											{% if perms.main.can_blogging %}
-												<a href="{% url subjects %}">Articles subjects</a>
+												<a href="{% url 'subjects' %}">Articles subjects</a>
 											{% endif %}
 										</li>
 										<li>
 											{% if perms.main.can_create_task %}
-												<a href="{% url tasksubjects %}">Tasks subjects</a>
+												<a href="{% url 'tasksubjects' %}">Tasks subjects</a>
 											{% endif %}
 										</li>
 										<li>
-											<a href="{% url privatesettings 'edit' %}">Settings</a>
+											<a href="{% url 'privatesettings' 'edit' %}">Settings</a>
 										</li>
 										{% if perms.main.can_blogging or perms.task.can_create_task %}
 											<li class="divider"></li>
 										{% endif %}
 										<li>
 											{% if perms.main.can_blogging %}
-												<a href="{% url addarticle %}">Add article</a>
+												<a href="{% url 'addarticle' %}">Add article</a>
 											{% endif %}
 										</li>
 										<li>
 											{% if perms.task.can_create_task %}
-												<a href="{% url addtask %}">Add task</a>
+												<a href="{% url 'addtask' %}">Add task</a>
 											{% endif %}
 										</li>
 										<li class="divider"></li>
 										<li>
-											<a class="current" href="{% url logout %}?next={{ request.path }}">Logout</a>
+											<a class="current" href="{% url 'logout' %}?next={{ request.path }}">Logout</a>
 										</li>
 									</ul>
 								</div>
@@ -66,7 +66,7 @@
 						{% else %}
 							<li>
 								<div class="btn-group">
-									<a href="{% url login %}?next={{ request.path }}" class="btn">Login <i class="icon-out"></i> </a>
+									<a href="{% url 'login' %}?next={{ request.path }}" class="btn">Login <i class="icon-out"></i> </a>
 								</div>
 							</li>
 						{% endif %}

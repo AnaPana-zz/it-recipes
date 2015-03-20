@@ -1,18 +1,18 @@
 #coding: utf-8 
-from django.views.generic.simple import direct_to_template
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.utils import simplejson
 from django.utils.datastructures import MultiValueDict
 from django import forms
 
-from main.forms import *
-from main.models import *
+from .forms import *
+from .models import *
 from utils import get_query, get_pagination_info, \
                   send_mail, refresh_captcha, get_neighbors
 
+
+import json
 
 @login_required
 def subjects(request):
@@ -37,7 +37,7 @@ def subjects(request):
         elif request.POST.get('edit_request'):
             subject = Subject.objects.get(pk=int(request.POST['item_id']))
             form = SubjectForm(instance=subject)
-            return direct_to_template(request,
+            return render(request,
                                       'main/forms/rowform.html',
                                       {
                                        'form' : form ,
@@ -52,7 +52,7 @@ def subjects(request):
                 form.save()
                 return HttpResponse("")
             else:
-                return direct_to_template(request,
+                return render(request,
                                           'main/forms/rowform.html',
                                           {
                                            'form' : form ,
@@ -67,7 +67,7 @@ def subjects(request):
     # empty form
     else:
         form = SubjectForm()
-    return direct_to_template(request, 'main/base/subjects.html',
+    return render(request, 'main/base/subjects.html',
                               {
                                'page_title' : 'Articles subjects',
                                'result' : result,
@@ -93,7 +93,6 @@ def main(request, page_type, item_name, page=1, delta=10, **kwargs):
 
 
 def blog(request, article_id=0):
-#     print "IP Address for debug-toolbar: " + request.META['REMOTE_ADDR']
     
     context_dict = {}
     context_dict['recent_articles'] = get_recent_articles()
@@ -103,18 +102,13 @@ def blog(request, article_id=0):
     context_dict['query'] = request.GET.get('q', '')
 
     if not int(article_id):
-        try:
-		latest_id = Article.objects.filter(is_published=True).latest('pk').id
-        except Article.DoesNotExist:
-		return redirect('subjects')
-	else:
-		return redirect('blog', int(latest_id))
-
+        return redirect('main', 'recent', 0)
+ 
     try:
         article = Article.objects.get(pk=int(article_id), is_published=True)
         articles = list(Article.objects.filter(subject=article.subject,
                                            is_published=True).order_by('pk'))
-        
+         
         context_dict['previous'], context_dict['next'] = get_neighbors(article,
                                                                        articles)
     except Article.DoesNotExist:
@@ -130,10 +124,10 @@ def blog(request, article_id=0):
     else:
         form = CommentForm(initial={'article':article,
                                     'parent_comment' : None})
-    
+     
     if request.is_ajax() and 'refresh_captcha' in request.GET:
         return refresh_captcha()
-    
+     
     if request.method == 'POST':
         if request.POST.get('add_request'):
             if request.POST['type'] == 'favorites':
@@ -144,14 +138,14 @@ def blog(request, article_id=0):
                 comment.delete()
             elif request.POST['type'] == 'article':
                 article = Article.objects.get(pk=int(request.POST['item_id']))
-                
+                 
                 for tag in article.mtags.all():
                     tag.amount -= 1
                     tag.save()
-                
+                 
                 for img in ArticleImage.objects.filter(article=article):
                     _delete_image(img.id)
-                
+                 
                 article.delete()
                 return HttpResponse('Article was successfully deleted.')
             elif request.POST['type'] == 'favorite':
@@ -161,24 +155,24 @@ def blog(request, article_id=0):
             form = CommentForm(request.POST)
             if form.is_valid():
                 comment = form.save()
-                
+                 
                 message_subject = 'New comment for your article \"%s\"' \
                                                                 % article.title
                 message_body = "User %s has added a new comment to your post." +\
                 "\nGo here and view it:\nwww.it-recipes.com%s" 
                 message_body = message_body % (comment.author, request.get_full_path())
-                
+                 
                 send_mail(article.author.email, message_subject, message_body)
-                
+                 
                 return redirect('blog', article.id)
             else:
                 if request.user.is_authenticated():
                     form.fields['name'].widget = forms.HiddenInput()
-    
+     
     context_dict['form'] = form
     context_dict['comments'] = get_comments_tree(article_id)
     
-    return direct_to_template(request, 'main/blog/blog.html', context_dict)
+    return render(request, 'main/blog/blog.html', context_dict)
 
 
 def edit_comment(request, comment_id):
@@ -191,7 +185,7 @@ def edit_comment(request, comment_id):
             return redirect('blog', comment.article.id)
     if request.user.is_authenticated():
         form.fields['name'].widget = forms.HiddenInput()
-    return direct_to_template(request, 'main/blog/editcomment.html',
+    return render(request, 'main/blog/editcomment.html',
                     {
                      'comment' : comment,
                      'form' : form,
@@ -215,7 +209,7 @@ def comment_dialog(request, comment_id):
             return redirect('blog', comment.article.id)
     if request.user.is_authenticated():
         form.fields['name'].widget = forms.HiddenInput()
-    return direct_to_template(request, 'main/blog/commentdialog.html',
+    return render(request, 'main/blog/commentdialog.html',
                     {
                      'comment_dialog' : get_comment_dialog(comment_id),
                      'form' : form,
@@ -227,13 +221,16 @@ def tags_results(request, context_dict, **kwargs):
     tag_name = str(kwargs.get('item_name'))
     p = int(kwargs.get('page'))
     delta = int(kwargs.get('delta'))
-    articles = Tag.objects.get(name=tag_name).article_set\
-                                                .filter(is_published=True)\
-                                                .select_related('subject')
+    try:
+        articles = Tag.objects.get(name=tag_name).article_set\
+                                                    .filter(is_published=True)\
+                                                    .select_related('subject')
+    except Tag.DoesNotExist:
+        articles = []
                                                 
     context_dict['articles'] = articles[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(articles), p, delta)
-    return direct_to_template(request, 'main/itemresults/tagresults.html', context_dict)
+    return render(request, 'main/itemresults/tagresults.html', context_dict)
 
 
 def subjects_results(request, context_dict, **kwargs):
@@ -245,7 +242,7 @@ def subjects_results(request, context_dict, **kwargs):
                                                     .select_related()
     context_dict['articles'] = articles[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(articles), p, delta)
-    return direct_to_template(request, 'main/itemresults/subjectresults.html', context_dict)
+    return render(request, 'main/itemresults/subjectresults.html', context_dict)
 
 
 def search_results(request, context_dict, **kwargs):
@@ -265,7 +262,7 @@ def search_results(request, context_dict, **kwargs):
     context_dict['articles'] = articles[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(articles), p, delta)
     
-    return direct_to_template(request, 'main/itemresults/searchresults.html', context_dict)
+    return render(request, 'main/itemresults/searchresults.html', context_dict)
 
 
 def recent_results(request, context_dict, **kwargs):
@@ -275,7 +272,7 @@ def recent_results(request, context_dict, **kwargs):
                                                         .order_by('-pk')
     context_dict['articles'] = articles[(p-1)*delta : p*delta]
     context_dict['pagination'] = get_pagination_info(len(articles), p, delta)
-    return direct_to_template(request, 'main/itemresults/subjectresults.html', context_dict)
+    return render(request, 'main/itemresults/subjectresults.html', context_dict)
 
 
 @login_required
@@ -302,7 +299,7 @@ def add_article(request):
     else:
         form = ArticleForm(initial={'author' : request.user.id})
     tags = ",".join(list(set(["\'%s\'" % t.name for t in Tag.objects.all()])))
-    return direct_to_template(request, 'main/blog/addarticle.html',
+    return render(request, 'main/blog/addarticle.html',
                                                               {
                                                                'form' : form,
                                                                'tags' : tags
@@ -351,7 +348,7 @@ def edit_article(request, article_id):
     else:
         return redirect('blog', 0)
     tags = ",".join(list(set(["\'%s\'" % t.name for t in Tag.objects.all()])))
-    return direct_to_template(request, 'main/blog/editarticle.html',
+    return render(request, 'main/blog/editarticle.html',
                                                         {'form' : form,
                                                          'tags' : tags,
                                                          'article' : article,
@@ -365,7 +362,7 @@ def preview_article(request, article_id):
         article.is_published = True
         article.save()
         return redirect('blog', article.id)
-    return direct_to_template(request, 'main/blog/previewarticle.html',
+    return render(request, 'main/blog/previewarticle.html',
                                                       {
                                                        'page_title' : 'Preview',
                                                        'article' : article
@@ -395,7 +392,7 @@ def links(request):
     # empty form
     else:
         form = UsefulLinkForm()
-    return direct_to_template(request, 'main/base/links.html',
+    return render(request, 'main/base/links.html',
                                             {'page_title' : 'Useful links',
                                              'list' : result,
                                              'form' : form,
@@ -405,11 +402,7 @@ def links(request):
 
 
 def about(request):
-    return direct_to_template(request, 'main/base/about.html')
-
-
-def page_not_found(request):
-    return direct_to_template(request, '404.html')
+    return render(request, 'main/base/about.html')
 
 
 def get_recent_articles():
@@ -452,7 +445,7 @@ def _image_function(request):
     form = ImageForm(request.POST, request.FILES)
     if form.is_valid():
         file = form.save()
-        return HttpResponse(simplejson.dumps({'id' : file.id,
+        return HttpResponse(json.dumps({'id' : file.id,
                                               'url' : file.image.url,
                                               'name' : file.image.name}))
     elif form.errors:

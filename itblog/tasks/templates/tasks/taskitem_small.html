@@ -1,8 +1,8 @@
 {% load extra_tags %}
 <div class="row-fluid">
 	<div class="span12">
-		<a class="article-title" href="{% url tasks 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
-		<a href="{% url task task.id %}" class="article-title">
+		<a class="article-title" href="{% url 'tasks' 'subjects' task.subject.name %}">{{ task.subject.name }} > </a>
+		<a href="{% url 'task' task.id %}" class="article-title">
 			{{ task.name }}
 		</a><br/>
 		<span class="muted">{{ task.votes }} vote{{ task.votes|pluralize }}, {{ task.solutions|length }} solution{{ task.solutions|length|pluralize }}</span>
@@ -14,7 +14,7 @@
 		<div class="row-fluid">
 			<div class="span12">
 				{% for tag in task.tags.all %}
-					<a href="{% url tasks 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
+					<a href="{% url 'tasks' 'tags' tag %}"><div class="label label-info tag-item">{{ tag }}</div></a>
 				{% endfor %}<br/>
 				<span class="muted">
 					<i>{% with task.date|today as today %}

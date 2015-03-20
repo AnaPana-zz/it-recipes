@@ -13,7 +13,7 @@
 			<div class="row">
 				<form method="POST">{% csrf_token %}
 					<div class="pull-right">
-						<a href="{% url editarticle article.id %}" class="btn btn-info">Continue editing</a>
+						<a href="{% url 'editarticle' article.id %}" class="btn btn-info">Continue editing</a>
 						<input type="hidden" name="publish_article">
 						<input type="submit" class="btn btn-success" value="Publish article">
 					</div>

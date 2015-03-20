@@ -1,5 +1,6 @@
 #!/bin/bash -ex
 cd ${OPENSHIFT_REPO_DIR}/itblog
+python manage.py test
 python manage.py syncdb --noinput
 
 echo "from django.contrib.auth.models import User; u = User.objects.create_superuser('admin', 'myemail@example.com', '123');" | python manage.py shell

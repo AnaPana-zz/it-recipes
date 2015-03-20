@@ -19,13 +19,13 @@
 		</select>
 		<ul style="float:left;">{% with current=pagination.p %}
 			<li class="{% if current == pagination.page_range|first %}disabled{% endif %}">
-				<a {% if not current == pagination.page_range|first %}href="{% url main page_type item_name current|add:'-1' pagination.delta %}{% if query %}?q={{ query }}{% endif %}" {% endif %} >«</a>
+				<a {% if not current == pagination.page_range|first %}href="{% url 'main' page_type item_name current|add:'-1' pagination.delta %}{% if query %}?q={{ query }}{% endif %}" {% endif %} >«</a>
 			</li>
 			
 			{% for page in pagination.page_range %}
 				{% if current < page|add:'3' and current > page|add:'-3' or forloop.first or forloop.last %}
 					<li class="{% if current == page %}active{% endif %}">
-							<a {% if not current == page %}href = "{% url main page_type item_name page pagination.delta %}{% if query %}?q={{ query }}{% endif %}"{% endif %}>
+							<a {% if not current == page %}href = "{% url 'main' page_type item_name page pagination.delta %}{% if query %}?q={{ query }}{% endif %}"{% endif %}>
 								{{ page }}
 							</a>
 					</li>
@@ -36,7 +36,7 @@
 				{% endif %}
 			{% endfor %}
 			<li class="{% if current == pagination.page_range|last %}disabled{% endif %}">
-				<a {% if not current == pagination.page_range|last %}href="{% url main page_type item_name current|add:'1' pagination.delta %}{% if query %}?q={{ query }}{% endif %}"{% endif %}">»</a>
+				<a {% if not current == pagination.page_range|last %}href="{% url 'main' page_type item_name current|add:'1' pagination.delta %}{% if query %}?q={{ query }}{% endif %}"{% endif %}">»</a>
 			</li>
 			{% endwith %}
 		</ul>
