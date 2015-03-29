@@ -8,3 +8,6 @@
 *.log
 *.db
 .coverage
+.openshift/*
+itblog/credentials.py
+
