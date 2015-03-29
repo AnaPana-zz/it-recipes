@@ -1,4 +1,0 @@
-#!/bin/bash -ex
-
-cd ${OPENSHIFT_REPO_DIR}/itblog
-python manage.py collectstatic --noinput
