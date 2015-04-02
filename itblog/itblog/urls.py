@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, include, url
-from django.views.generic import RedirectView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', RedirectView.as_view(url='/articles/recent/0', permanent=True), name='home'),
+    url(r'^$', 'main.views.home', name='home'),
     url(r'^subject$', 'main.views.subjects', name='subjects'),
     url(r'^about$', 'main.views.about', name='about'),
     url(r'^links$', 'main.views.links', name='links'),

@@ -14,6 +14,14 @@ from utils import get_query, get_pagination_info, \
 
 import json
 
+def home(request):
+    context_dict = {}
+    context_dict['recent_articles'] = get_recent_articles()
+    context_dict['tags'] = Tag.objects.all().filter(article__is_published=True)\
+                                .distinct().order_by('name')
+    context_dict['list'] = get_subjects_tree()
+    return render(request, 'main/home.html', context_dict)
+
 @login_required
 def subjects(request):
     """

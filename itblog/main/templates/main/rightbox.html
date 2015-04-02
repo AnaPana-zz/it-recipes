@@ -5,10 +5,7 @@
 
 <div class="grey-box">
 	
-	<a href="{% url 'main' 'recent' '0' %}">
-		<h4>Recent articles</h4>
-	</a>
-	
+	<h4>Recent articles</h4>
 	<ul class="nav articles-list">
 		{% for article in recent_articles %}
 			<li>
@@ -18,6 +15,9 @@
 			</li>
 		{% endfor %}
 	</ul>
+	{% if recent_articles %}
+		<a href="{% url 'main' 'recent' '0' %}">More articles >>></a>
+	{% endif %}
 </div>
 
 <div class="grey-box">
