@@ -1,4 +1,7 @@
 {% extends 'main/base.html' %}
+
+{% load static %}
+
 {% block content %}
 	<div class="row">
 		<div class="span9">
@@ -12,7 +15,7 @@
 						<h3>Feedback</h3>
 						<h5>We appreciate any feedback, comments, solutions etc. If you want to participate in articles writing, contact us <a href="{% url 'about' %}">here</a>.</h5>
 						<a href="{% url 'main' 'recent' 0 %}"><h3>Enjoy!</h3>
-						<img src="{{ STATIC_URL }}/img/zwho4k.gif"/>
+						<img src="{% static "/img/zwho4k.gif" %}"/>
 					{% endblock %}
 				</div>
 			</div>

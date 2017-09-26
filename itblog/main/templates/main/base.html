@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -5,33 +7,33 @@
 		<title>IT Blog</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-		<link href="{{ STATIC_URL }}css/main.css" rel="stylesheet" media="screen">
-		<link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
-		<link href="{{ STATIC_URL }}css/bootstrap-tagmanager.css" rel="stylesheet" media="screen">
-		<link href="{{ STATIC_URL }}css/jquery-ui.css" rel="stylesheet" />
-		<link href="{{ STATIC_URL }}js/ckeditor/contents.css" rel="stylesheet" />
+		<link href="{% static "css/main.css" %}" rel="stylesheet" media="screen">
+		<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
+		<link href="{% static "css/bootstrap-tagmanager.css" %}" rel="stylesheet" media="screen">
+		<link href="{% static "css/jquery-ui.css" %}" rel="stylesheet" />
+		<link href="{% static "js/ckeditor/contents.css" %}" rel="stylesheet" />
 
-		<link href="{{ STATIC_URL }}js/syntaxhighlighter/styles/shCore.css" rel="stylesheet" />
-		<link href="{{ STATIC_URL }}js/syntaxhighlighter/styles/shThemeMidnight.css" rel="stylesheet" />
+		<link href="{% static "js/syntaxhighlighter/styles/shCore.css" %}" rel="stylesheet" />
+		<link href="{% static "js/syntaxhighlighter/styles/shThemeMidnight.css" %}" rel="stylesheet" />
 
-		<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.9.2.custom.min.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/django-coockies.js" ></script>
+		<script type="text/javascript" src="{% static "js/jquery-1.9.1.min.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/jquery-ui-1.9.2.custom.min.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/django-coockies.js" %}" ></script>
 
-		<script type="text/javascript" src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shCore.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shAutoloader.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shLegacy.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushPython.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushJScript.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushXml.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}js/syntaxhighlighter/scripts/shBrushBash.js" ></script>
+		<script type="text/javascript" src="{% static "js/syntaxhighlighter/scripts/shCore.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/syntaxhighlighter/scripts/shAutoloader.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/syntaxhighlighter/scripts/shLegacy.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/syntaxhighlighter/scripts/shBrushPython.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/syntaxhighlighter/scripts/shBrushJScript.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/syntaxhighlighter/scripts/shBrushXml.js" %}" ></script>
+		<script type="text/javascript" src="{% static "js/syntaxhighlighter/scripts/shBrushBash.js" %}" ></script>
 		
-		<link href="{{ STATIC_URL }}js/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" />
-		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-tagsinput/bootstrap-tagsinput.js" ></script>
+		<link href="{% static "js/bootstrap-tagsinput/bootstrap-tagsinput.css" %}" rel="stylesheet" />
+		<script type="text/javascript" src="{% static "js/bootstrap-tagsinput/bootstrap-tagsinput.js" %}" ></script>
 
-		<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-		<script src="{{ STATIC_URL }}js/bootstrap.file-input.js"></script>
-		<script src="{{ STATIC_URL }}js/ckeditor/ckeditor.js"></script>
+		<script src="{% static "js/bootstrap.min.js" %}"></script>
+		<script src="{% static "js/bootstrap.file-input.js" %}"></script>
+		<script src="{% static "js/ckeditor/ckeditor.js" %}"></script>
 		
 		<script>
 			{% include 'main/base/google_analytics.js' %}
@@ -47,7 +49,7 @@
 				{% include 'main/menu.html' %}
 
 				<div class="separator-shadow-bottom">
-					<img alt="" src="{{ STATIC_URL }}/img/shadow-separator-wide-bottom.png">
+					<img alt="" src="{% static "/img/shadow-separator-wide-bottom.png">
 				</div>
 				<div class="container">
 					<!-- <h2 style="color:#AAAAAA">{{ page_title }}</h2>				 -->

@@ -419,7 +419,7 @@ def get_recent_articles():
 
 def get_subjects_tree():
     subjects_list = []
-    for parent in Subject.objects.filter(parent_subject=None).select_related('article'):
+    for parent in Subject.objects.filter(parent_subject=None):  #.select_related('article'):
         children = []
         for subject in Subject.objects.filter(parent_subject=parent):
             articles = Article.objects.filter(subject=subject, is_published=True)\
