@@ -10,4 +10,5 @@
 .coverage
 .openshift/*
 itblog/credentials.py
-
+.env
+mysite/

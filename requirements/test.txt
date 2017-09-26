@@ -1,0 +1,5 @@
+-r base.txt
+pytest~=3.2
+selenium~=3.6
+mock~=2.0
+dropbox~=8.2
