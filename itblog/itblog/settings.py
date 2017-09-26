@@ -30,7 +30,7 @@ SECRET_KEY = '#rnb-u758=qn5p5#qyr_-(_b%sbrq@a1k!xf(sg2)nr-b89^&v'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '.rhcloud.com',
+    '.ncbi.nlm.nih.gov',
     '.it-recipes.com',
 ]
 
