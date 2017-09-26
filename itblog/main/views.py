@@ -8,7 +8,7 @@ from django import forms
 
 from .forms import *
 from .models import *
-from utils import get_query, get_pagination_info, \
+from .utils import get_query, get_pagination_info, \
                   send_mail, refresh_captcha, get_neighbors
 
 
@@ -457,7 +457,7 @@ def _image_function(request):
                                               'url' : file.image.url,
                                               'name' : file.image.name}))
     elif form.errors:
-        print form.errors
+        print(form.errors)
         return HttpResponse('')
     return HttpResponse('')
 

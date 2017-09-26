@@ -1,3 +1,4 @@
 Django~=1.11
 django-simple-captcha~=0.5
 django-tinymce~=2.6
+django-environ~=0.4
