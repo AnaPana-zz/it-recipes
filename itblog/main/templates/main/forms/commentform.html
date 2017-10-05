@@ -21,7 +21,7 @@
 		{{ field.label }}
 		<div class="controls">
 			{{ field }}
-			{% if field.name = 'captcha' %}
+			{% if field.name == 'captcha' %}
 				<a class="btn btn-small btn-refresh" onclick="refresh_captcha()"><i class="icon-refresh"></i> Refresh</a>
 			{% endif %}
 			<span class="help">{{ field.errors }}</span>

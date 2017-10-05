@@ -29,7 +29,7 @@
 								{{ page }}
 							</a>
 					</li>
-				{% elif current = page|add:'3' or current = page|add:'-3' %}
+				{% elif current == page|add:'3' or current == page|add:'-3' %}
 					<li class="disabled">
 							<span>...</span>
 					</li>

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -86,13 +87,15 @@ WSGI_APPLICATION = 'itblog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USERNAME'],
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST': os.environ['DB_HOST'],
-    }
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USERNAME'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+    },
 }
 
+if 'test' in sys.argv or 'test_coverage' in sys.argv: # Covers regular testing and django-coverage
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

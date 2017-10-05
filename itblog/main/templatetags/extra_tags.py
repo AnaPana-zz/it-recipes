@@ -1,3 +1,5 @@
+import dashboard.views as views
+
 from django.core.urlresolvers import reverse
 from django import template
 from django.utils.html import mark_safe
@@ -14,19 +16,19 @@ def dash_menu(selected, user):
     The input format of item is: [url, name, count]
     '''
     list = [            
-            [reverse('dashboard.views.articles', args=('articles', 0)), 'Articles',
+            [reverse(views.articles, args=('articles', 0)), 'Articles',
              Article.objects.filter(author=user, is_published=True).count()], 
-            [reverse('dashboard.views.articles', args=('drafts', 0,)), 'Drafts',
+            [reverse(views.articles, args=('drafts', 0,)), 'Drafts',
              Article.objects.filter(author=user, is_published=False).count()],
-            [reverse('dashboard.views.my_comments'), 'My comments',
+            [reverse(views.my_comments), 'My comments',
              Comment.objects.filter(author=user).count()],
-            [reverse('dashboard.views.comments_to_me'), 'Comments to me',
+            [reverse(views.comments_to_me), 'Comments to me',
              Comment.objects.filter(article__author=user).exclude(author=user).count()],
-            [reverse('dashboard.views.my_solutions'), 'My solutions',
+            [reverse(views.my_solutions), 'My solutions',
              Solution.objects.filter(author=user).count()],
-            [reverse('dashboard.views.favorites', args=('favorites', 0,)), 'Favorites',
+            [reverse(views.favorites, args=('favorites', 0,)), 'Favorites',
              Favorite.objects.filter(owner=user).count()],
-            [reverse('dashboard.views.private_settings', args=('edit',)), 'Settings',
+            [reverse(views.private_settings, args=('edit',)), 'Settings',
              ''],
         ]
     return {'dash_menu' : list, 'selected' : selected}

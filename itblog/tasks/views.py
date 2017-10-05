@@ -226,7 +226,7 @@ def edit_solution_comment(request, comment_id):
 
 def get_subjects_tree():
     subjects_list = []
-    for parent in TaskSubject.objects.filter(parent_subject=None).select_related('task'):
+    for parent in TaskSubject.objects.filter(parent_subject=None).select_related('parent_subject'):
         children = []
         for subject in TaskSubject.objects.filter(parent_subject=parent):
             tasks = Task.objects.filter(subject=subject).order_by('-pk').values()
