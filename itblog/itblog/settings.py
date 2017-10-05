@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import environ
 
-env = environ.Env()
-env.read_env(".env")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,10 +25,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '#rnb-u758=qn5p5#qyr_-(_b%sbrq@a1k!xf(sg2)nr-b89^&v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '.ncbi.nlm.nih.gov',
+    '.pythonanywhere.com',
     '.it-recipes.com',
 ]
 
@@ -85,13 +84,14 @@ WSGI_APPLICATION = 'itblog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-if env.bool("REMOTE_DB", default=False):
+if DEBUG is False:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': env.str('DB_NAME'),
-            'USER': env.str('DB_USERNAME'),
-            'PASSWORD': env.str('DB_PASSWORD'),
+            'NAME': os.environ['DB_NAME'],
+            'USER': os.environ['DB_USERNAME'],
+            'PASSWORD': os.environ['DB_PASSWORD'],
+            'HOST': os.environ['DB_HOST'],
         }
     }
 else:
@@ -142,7 +142,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/static/user_img/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, "static"),
+#]
 
+STATIC_ROOT = 'static'
