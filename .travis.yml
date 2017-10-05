@@ -4,7 +4,7 @@ python:
   - "3.4"
   - "nightly"
 # command to install dependencies
-install: "pip install -r requirements.txt"
+install: "pip install -r requirements/test.txt"
 # # command to run tests
 script: 
   - cd itblog
